@@ -30,7 +30,7 @@ import io.patriot_framework.generator.device.consumer.Storage;
 import io.patriot_framework.generator.device.consumer.exceptions.ConsumerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.UnresolvedAddressException;
@@ -121,6 +121,6 @@ public final class Server extends AbstractDevice implements Consumer {
 
     @Override
     public List<Data> requestData(Object... params) {
-        throw new NotImplementedException();
+        throw new NotImplementedException("");
     }
 }
