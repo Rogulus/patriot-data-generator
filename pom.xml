@@ -366,9 +366,6 @@
          <artifactId>netty-codec-http</artifactId>
          <version>4.1.80.Final</version>
       </dependency>
-
-
-
    </dependencies>
 
    <profiles>
@@ -423,12 +420,4 @@
          </build>
       </profile>
    </profiles>
-
-   <repositories>
-      <repository>
-         <id>bintray</id>
-         <url>http://dl.bintray.com/andsel/maven/</url>
-      </repository>
-   </repositories>
-
 </project>
