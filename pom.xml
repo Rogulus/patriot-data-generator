@@ -19,7 +19,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>io.patriot-framework</groupId>
-   <version>2.0.1-SNAPSHOT</version>
+   <version>5.0.0-SNAPSHOT</version>
    <artifactId>generator</artifactId>
 
    <name>Device generator</name>
@@ -121,6 +121,16 @@
          </roles>
          <timezone>Europe/Bratislava</timezone>
       </developer>
+      <developer>
+         <id>mstastny</id>
+         <email>mstastny@redhat.com</email>
+         <organization>Red Hat</organization>
+         <name>Marek Šťastný</name>
+         <roles>
+            <role>Developer</role>
+         </roles>
+         <timezone>Europe/Prague</timezone>
+      </developer>
    </developers>
    <distributionManagement>
       <snapshotRepository>
@@ -136,7 +146,6 @@
       <org.junit.platform.version>1.3.0</org.junit.platform.version>
       <org.junit.jupiter.version>5.4.2</org.junit.jupiter.version>
       <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-      <slf4j-log4j2-version>2.0.1</slf4j-log4j2-version>
       <gpg-plugin-version>1.6</gpg-plugin-version>
       <release-plugin-version>2.5.3</release-plugin-version>
    </properties>
@@ -187,13 +196,14 @@
       <dependency>
          <groupId>ca.umontreal.iro.simul</groupId>
          <artifactId>ssj</artifactId>
-         <version>3.2.1</version>
+         <version>3.3.2</version>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/org.json/json -->
       <dependency>
          <groupId>org.json</groupId>
          <artifactId>json</artifactId>
-         <version>20210307</version>
+         <version>20230618</version>
       </dependency>
 
       <!--Math Expressions-->
@@ -202,22 +212,20 @@
          <artifactId>exp4j</artifactId>
          <version>0.4.8</version>
       </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
       <dependency>
-         <groupId>org.apache.httpcomponents</groupId>
-         <artifactId>httpclient</artifactId>
-         <version>4.5.13</version>
+         <groupId>org.apache.httpcomponents.client5</groupId>
+         <artifactId>httpclient5</artifactId>
+         <version>5.2.1</version>
       </dependency>
-      <dependency>
-         <groupId>org.junit.jupiter</groupId>
-         <artifactId>junit-jupiter-api</artifactId>
-         <version>${org.junit.jupiter.version}</version>
-         <scope>test</scope>
-      </dependency>
+
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-simple</artifactId>
-         <version>1.7.36</version>
+         <version>2.0.7</version>
       </dependency>
+
       <dependency>
          <groupId>javax.inject</groupId>
          <artifactId>javax.inject</artifactId>
@@ -226,141 +234,115 @@
       <dependency>
          <groupId>jakarta.enterprise</groupId>
          <artifactId>jakarta.enterprise.cdi-api</artifactId>
-         <version>2.0.2</version>
+         <version>4.0.1</version>
       </dependency>
       <dependency>
          <groupId>org.dom4j</groupId>
          <artifactId>dom4j</artifactId>
-         <version>2.1.3</version>
+         <version>2.1.4</version>
       </dependency>
       <dependency>
          <groupId>org.elasticsearch.client</groupId>
          <artifactId>transport</artifactId>
-         <version>7.17.7</version>
+         <version>7.17.10</version>
       </dependency>
       <dependency>
          <groupId>org.eclipse.californium</groupId>
          <artifactId>californium-core</artifactId>
          <version>2.7.3</version>
       </dependency>
-      <!--version >= 2.12.0 solves the error with jackson-databind 2.12.7-->
-      <dependency>
-         <groupId>com.fasterxml.jackson.core</groupId>
-         <artifactId>jackson-annotations</artifactId>
-         <version>2.12.4</version>
-      </dependency>
       <dependency>
          <groupId>com.fasterxml.jackson.core</groupId>
          <artifactId>jackson-databind</artifactId>
-         <version>2.13.4.2</version>
+         <version>2.13.5</version>
       </dependency>
       <dependency>
          <groupId>biz.paluch.logging</groupId>
          <artifactId>logstash-gelf</artifactId>
          <version>1.15.0</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
       <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-lang3</artifactId>
-         <version>3.9</version>
+         <version>3.12.0</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
       <dependency>
          <groupId>org.eclipse.paho</groupId>
          <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-         <version>1.2.2</version>
+         <version>1.2.4</version>
       </dependency>
+
+
+      <dependency>
+         <groupId>org.eclipse.jetty.http2</groupId>
+         <artifactId>http2-client</artifactId>
+         <version>11.0.15</version>
+      </dependency>
+
+      <!-- test scope begin -->
       <dependency>
          <groupId>org.junit.jupiter</groupId>
          <artifactId>junit-jupiter-engine</artifactId>
          <version>${org.junit.jupiter.version}</version>
          <scope>test</scope>
       </dependency>
-      <!-- Vulnerability from dependency jackson-mapper-asl: CVE-2019-10172 -->
+
+      <dependency>
+         <groupId>org.junit.jupiter</groupId>
+         <artifactId>junit-jupiter-api</artifactId>
+         <version>${org.junit.jupiter.version}</version>
+         <scope>test</scope>
+      </dependency>
+
       <dependency>
          <groupId>io.rest-assured</groupId>
          <artifactId>rest-assured</artifactId>
          <version>5.1.1</version>
          <scope>test</scope>
       </dependency>
+
       <dependency>
          <groupId>io.moquette</groupId>
          <artifactId>moquette-broker</artifactId>
-         <version>0.15</version>
+         <version>0.16</version>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-api</artifactId>
-         <version>2.0.0</version>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-reload4j</artifactId>
-         <version>2.0.0</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.eclipse.jetty.http2</groupId>
-         <artifactId>http2-client</artifactId>
-         <version>9.4.48.v20220622</version>
-         <scope>test</scope>
-      </dependency>
+
       <dependency>
          <groupId>org.eclipse.jetty.http2</groupId>
          <artifactId>http2-http-client-transport</artifactId>
-         <version>9.4.48.v20220622</version>
+         <version>11.0.15</version>
          <scope>test</scope>
       </dependency>
 
-      <!-- Dependency mediation - replacement dependencies of dependencies with vulnerabilities-->
-      <!-- Overrides dependency vulnerability of:
-            exp4j,
-            californium-core,
-            jackson-annotations.
-         CVE-2020-15250 -->
+      <!-- Resolve vulnerabilities of from transitive dependencies -->
+
+      <!-- ssj -->
+      <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.13.2</version>
-         <scope>test</scope>
+         <groupId>com.google.code.gson</groupId>
+         <artifactId>gson</artifactId>
+         <version>2.10.1</version>
       </dependency>
-      <!-- Overrides dependency vulnerability of exp4j CVE-2017-5929 -->
+
+      <!-- transport -->
+      <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
       <dependency>
-         <groupId>ch.qos.logback</groupId>
-         <artifactId>logback-classic</artifactId>
-         <version>1.3.0</version>
-         <scope>test</scope>
+         <groupId>org.yaml</groupId>
+         <artifactId>snakeyaml</artifactId>
+         <version>2.0</version>
       </dependency>
-      <!-- Overrides dependency vulnerability of httpclient Cxeb68d52e-5509 -->
+
+      <!-- logstash-gelf -->
+      <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
       <dependency>
-         <groupId>commons-codec</groupId>
-         <artifactId>commons-codec</artifactId>
-         <version>1.13</version>
-      </dependency>
-      <!-- Overrides dependency vulnerability of moquette-broker CVE-2021-21295 -->
-      <dependency>
-         <groupId>io.netty</groupId>
-         <artifactId>netty-codec-http2</artifactId>
-         <version>4.1.80.Final</version>
-      </dependency>
-      <!-- Overrides dependency vulnerability of moquette-broker -->
-      <dependency>
-         <groupId>io.netty</groupId>
-         <artifactId>netty-common</artifactId>
-         <version>4.1.80.Final</version>
-      </dependency>
-      <dependency>
-         <groupId>io.netty</groupId>
-         <artifactId>netty-codec</artifactId>
-         <version>4.1.80.Final</version>
-      </dependency>
-      <dependency>
-         <groupId>io.netty</groupId>
-         <artifactId>netty-codec-http</artifactId>
-         <version>4.1.80.Final</version>
+         <groupId>org.apache.logging.log4j</groupId>
+         <artifactId>log4j-core</artifactId>
+         <version>2.20.0</version>
       </dependency>
    </dependencies>
-
    <profiles>
       <profile>
          <id>release</id>
