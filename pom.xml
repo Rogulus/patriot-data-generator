@@ -29,8 +29,8 @@
       <connection>scm:git:git@github.com:PatrIoT-Framework/patriot-data-generator.git</connection>
       <developerConnection>scm:git:git@github.com:PatrIoT-Framework/patriot-data-generator.git</developerConnection>
       <url>https://github.com/PatrIoT-Framework/patriot-data-generator</url>
-     <tag>HEAD</tag>
-  </scm>
+      <tag>HEAD</tag>
+   </scm>
    <licenses>
       <license>
          <name>Apache License, Version 2.0</name>
@@ -143,11 +143,8 @@
       </repository>
    </distributionManagement>
    <properties>
-      <org.junit.platform.version>1.3.0</org.junit.platform.version>
-      <org.junit.jupiter.version>5.4.2</org.junit.jupiter.version>
-      <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-      <gpg-plugin-version>1.6</gpg-plugin-version>
-      <release-plugin-version>2.5.3</release-plugin-version>
+      <org.junit.jupiter.version>5.9.3</org.junit.jupiter.version>
+      <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
    </properties>
 
    <build>
@@ -155,32 +152,39 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.0</version>
+            <version>3.11.0</version>
             <configuration>
                <release>17</release>
             </configuration>
          </plugin>
+
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>${maven-surefire-plugin.version}</version>
+            <version>3.1.2</version>
          </plugin>
+
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.6.0</version>
             <configuration>
                <descriptorRefs>
                   <descriptorRef>jar-with-dependencies</descriptorRef>
                </descriptorRefs>
             </configuration>
          </plugin>
+
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>${gpg-plugin-version}</version>
+            <version>${maven-gpg-plugin.version}</version>
          </plugin>
+
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-release-plugin</artifactId>
-            <version>${release-plugin-version}</version>
+            <version>3.0.1</version>
             <configuration>
                <autoVersionSubmodules>true</autoVersionSubmodules>
                <useReleaseProfile>false</useReleaseProfile>
@@ -191,29 +195,26 @@
       </plugins>
    </build>
 
+
    <dependencies>
-      <!-- https://mvnrepository.com/artifact/ca.umontreal.iro.simul/ssj -->
       <dependency>
          <groupId>ca.umontreal.iro.simul</groupId>
          <artifactId>ssj</artifactId>
          <version>3.3.2</version>
       </dependency>
 
-      <!-- https://mvnrepository.com/artifact/org.json/json -->
       <dependency>
          <groupId>org.json</groupId>
          <artifactId>json</artifactId>
          <version>20230618</version>
       </dependency>
 
-      <!--Math Expressions-->
       <dependency>
          <groupId>net.objecthunter</groupId>
          <artifactId>exp4j</artifactId>
          <version>0.4.8</version>
       </dependency>
 
-      <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
       <dependency>
          <groupId>org.apache.httpcomponents.client5</groupId>
          <artifactId>httpclient5</artifactId>
@@ -261,13 +262,11 @@
          <artifactId>logstash-gelf</artifactId>
          <version>1.15.0</version>
       </dependency>
-      <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
       <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-lang3</artifactId>
          <version>3.12.0</version>
       </dependency>
-      <!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
       <dependency>
          <groupId>org.eclipse.paho</groupId>
          <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
@@ -282,6 +281,7 @@
       </dependency>
 
       <!-- test scope begin -->
+
       <dependency>
          <groupId>org.junit.jupiter</groupId>
          <artifactId>junit-jupiter-engine</artifactId>
@@ -320,7 +320,6 @@
       <!-- Resolve vulnerabilities of from transitive dependencies -->
 
       <!-- ssj -->
-      <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
       <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
@@ -328,7 +327,6 @@
       </dependency>
 
       <!-- transport -->
-      <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
       <dependency>
          <groupId>org.yaml</groupId>
          <artifactId>snakeyaml</artifactId>
@@ -336,13 +334,13 @@
       </dependency>
 
       <!-- logstash-gelf -->
-      <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
       <dependency>
          <groupId>org.apache.logging.log4j</groupId>
          <artifactId>log4j-core</artifactId>
          <version>2.20.0</version>
       </dependency>
    </dependencies>
+
    <profiles>
       <profile>
          <id>release</id>
@@ -354,6 +352,7 @@
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-javadoc-plugin</artifactId>
+                  <version>3.5.0</version>
                   <configuration>
                      <release>17</release>
                   </configuration>
@@ -369,6 +368,7 @@
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-gpg-plugin</artifactId>
+                  <version>${maven-gpg-plugin.version}</version>
                   <executions>
                      <execution>
                         <id>sign-artifacts</id>
@@ -382,6 +382,7 @@
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-source-plugin</artifactId>
+                  <version>3.3.0</version>
                   <executions>
                      <execution>
                         <id>attach-sources</id>
