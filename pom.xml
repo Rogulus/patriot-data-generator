@@ -19,7 +19,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>io.patriot-framework</groupId>
-   <version>5.0.0</version>
+   <version>5.0.0-SNAPSHOT</version>
    <artifactId>generator</artifactId>
    <name>Device generator</name>
    <description>Library which is part of PatrIoT Framework responsible for device emulation and data generation.</description>
