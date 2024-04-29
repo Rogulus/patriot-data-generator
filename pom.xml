@@ -312,6 +312,20 @@
          <version>9.4.35.v20201120</version>
          <scope>test</scope>
       </dependency>
+<!--      <dependency>-->
+<!--         <groupId>org.porticoproject</groupId>-->
+<!--         <artifactId>portico</artifactId>-->
+<!--         <version>2.1.0</version>-->
+<!--         <scope>system</scope>-->
+<!--         <systemPath>${project.basedir}/portico-2.1.0/lib/portico.jar</systemPath>-->
+<!--      </dependency>-->
+      <dependency>
+         <groupId>org.porticoproject</groupId>
+         <artifactId>portico</artifactId>
+         <version>2.1.0</version>
+         <scope>system</scope>
+         <systemPath>${project.basedir}/portico-2.1.0/lib/portico.jar</systemPath>
+      </dependency>
    </dependencies>
 
    <profiles>

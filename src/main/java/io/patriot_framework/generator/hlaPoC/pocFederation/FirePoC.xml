@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelIdentification>
+        <name>FirePoC</name>
+        <type>FOM</type>
+        <version>1.0</version>
+        <modificationDate>2024-04-29</modificationDate>
+        <securityClassification>Unclassified</securityClassification>
+        <description>Tralala.</description>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>Bc. Marek Stastny</pocName>
+        </poc>
+    </modelIdentification>
+
+
+   <objects>
+      <objectClass>
+         <name>HLAobjectRoot</name>
+<!--         <objectClass>-->
+<!--            <name>Temperature</name>-->
+<!--            <sharing>PublishSubscribe</sharing>-->
+<!--            <semantics>Statement of money owed by the customer</semantics>-->
+<!--         </objectClass>-->
+         <objectClass>
+            <name>MapElement</name>
+            <sharing>PublishSubscribe</sharing>
+            <attribute>
+               <name>Value</name>
+               <dataType>HLAinteger32BE</dataType>
+               <updateType>Static</updateType>
+               <sharing>PublishSubscribe</sharing>
+               <transportation>HLAreliable</transportation>
+               <order>ReceiveOrder</order>
+            </attribute>
+         </objectClass>
+      </objectClass>
+   </objects>
+
+   <interactions>
+      <interactionClass>
+         <name>HLAinteractionRoot</name>
+         <interactionClass>
+            <name>TemperatureUpdate</name>
+            <sharing>PublishSubscribe</sharing>
+            <dimensions/>
+            <transportation>HLAreliable</transportation>
+<!--            <order>TimeStamp</order>-->
+            <semantics>The base class of interactions between HeatMap and other federates</semantics>
+            <parameter>
+               <name>Temperature</name>
+               <dataType>HLAinteger16BE</dataType>
+               <semantics>Temperature</semantics>
+            </parameter>
+            <parameter>
+               <name>Coordinate</name>
+               <dataType>HLAinteger16BE</dataType>
+               <semantics>Coordinate</semantics>
+            </parameter>
+         </interactionClass>
+
+         <interactionClass>
+            <name>FireExtinguish</name>
+            <sharing>PublishSubscribe</sharing>
+            <dimensions/>
+            <transportation>HLAreliable</transportation>
+<!--            <order>TimeStamp</order>-->
+            <semantics>The base class of interactions between HeatMap and Fire extinguisher</semantics>
+            <parameter>
+               <name>Coordinate</name>
+               <dataType>HLAinteger16BE</dataType>
+               <semantics>Coordinate</semantics>
+            </parameter>
+         </interactionClass>
+
+         <interactionClass>
+            <name>Test</name>
+            <sharing>PublishSubscribe</sharing>
+            <dimensions/>
+            <transportation>HLAreliable</transportation>
+            <semantics>The base class of interactions between HeatMap and Fire extinguisher</semantics>
+         </interactionClass>
+      </interactionClass>
+   </interactions>
+
+   <dimensions>
+<!--      <dimension>-->
+<!--         <name>SodaFlavor</name>-->
+<!--         <dataType>FlavorType</dataType>-->
+<!--         <upperBound>3</upperBound>-->
+<!--         <normalization>linearEnumerated (Flavor, [Cola, Orange, RootBeer])</normalization>-->
+<!--         <value>[0..3)</value>-->
+<!--      </dimension>-->
+<!--      <dimension>-->
+<!--         <name>BarQuantity</name>-->
+<!--         <dataType>DrinkCount</dataType>-->
+<!--         <upperBound>25</upperBound>-->
+<!--         <normalization>linear (NumberCups, 1, 25)</normalization>-->
+<!--         <value>[0)</value>-->
+<!--      </dimension>-->
+<!--      <dimension>-->
+<!--         <name>WaiterId</name>-->
+<!--         <dataType>EmplId</dataType>-->
+<!--         <upperBound>20</upperBound>-->
+<!--         <normalization>linear (WaiterId, 1, 20)</normalization>-->
+<!--         <value>Excluded</value>-->
+<!--      </dimension>-->
+   </dimensions>
+
+   <time>
+      <timeStamp>
+         <dataType>TimeType</dataType>
+         <semantics>Floating point value expressed in minutes</semantics>
+      </timeStamp>
+      <lookahead>
+         <dataType>LAType</dataType>
+         <semantics>Floating point value expressed in minutes (non-negative)</semantics>
+      </lookahead>
+   </time>
+
+   <tags>
+   </tags>
+
+   <synchronizations>
+      <synchronizationPoint>
+         <label>InitialPublish</label>
+         <dataType>NA</dataType>
+         <capability>NA</capability>
+         <semantics>Achieved when all classes are published and subscribed, and all initially present objects are registered</semantics>
+      </synchronizationPoint>
+      <synchronizationPoint>
+         <label>ReadyToRun</label>
+         <dataType>NA</dataType>
+         <capability>NA</capability>
+         <semantics>semantics</semantics>
+      </synchronizationPoint>
+      <synchronizationPoint>
+         <label>InitialUpdate</label>
+         <dataType>NA</dataType>
+         <capability>NA</capability>
+         <semantics>Achieved when instance attribute values for all initially present objects are updated</semantics>
+      </synchronizationPoint>
+      <synchronizationPoint>
+         <label>BeginTimeAdvance</label>
+         <dataType>NA</dataType>
+         <capability>NA</capability>
+         <semantics>Achieved when time management services are invoked</semantics>
+      </synchronizationPoint>
+      <synchronizationPoint>
+         <label>PauseExecution</label>
+         <dataType>TimeType</dataType>
+         <capability>NA</capability>
+         <semantics>Achieved when the time advance after the time in the user-supplied tag is attained; time advance
+            requests should then cease</semantics>
+      </synchronizationPoint>
+   </synchronizations>
+
+   <transportations>
+      <transportation>
+         <name>LowLatency</name>
+         <reliable>No</reliable>
+         <semantics>Choose the delivery mechanism that results in the lowest latency from service initiation to callback invocation at the receiving federate</semantics>
+      </transportation>
+   </transportations>
+
+   <switches>
+      <autoProvide isEnabled="true"/>
+      <conveyRegionDesignatorSets isEnabled="false"/>
+      <conveyProducingFederate isEnabled="false"/>
+      <attributeScopeAdvisory isEnabled="false"/>
+      <attributeRelevanceAdvisory isEnabled="false"/>
+      <objectClassRelevanceAdvisory isEnabled="true"/>
+      <interactionRelevanceAdvisory isEnabled="true"/>
+      <serviceReporting isEnabled="false"/>
+      <exceptionReporting isEnabled="false"/>
+      <delaySubscriptionEvaluation isEnabled="false"/>
+      <automaticResignAction resignAction="CancelThenDeleteThenDivest"/>
+   </switches>
+
+   <updateRates>
+      <updateRate>
+         <name>Low</name>
+         <rate>10.56</rate>
+         <semantics></semantics>
+      </updateRate>
+      <updateRate>
+         <name>Hi</name>
+         <rate>60.0</rate>
+         <semantics></semantics>
+      </updateRate>
+   </updateRates>
+
+   <dataTypes>
+      <basicDataRepresentations>
+         <basicData>
+            <name>UnsignedShort</name>
+            <size>16</size>
+            <interpretation>Integer in the range [0, 2^16 - 1]</interpretation>
+            <endian>Big</endian>
+            <encoding>16-bit unsigned integer.</encoding>
+         </basicData>
+      </basicDataRepresentations>
+      <simpleDataTypes>
+         <simpleData>
+            <name>TimeType</name>
+            <representation>HLAfloat32BE</representation>
+            <units>Minutes</units>
+            <resolution>0.01667</resolution>
+            <accuracy>NA</accuracy>
+            <semantics>Time representation</semantics>
+         </simpleData>
+         <simpleData>
+            <name>LAType</name>
+            <representation>HLAfloat32BE</representation>
+            <units>Minutes</units>
+            <resolution>0.01667</resolution>
+            <accuracy>NA</accuracy>
+            <semantics>Time interval (non-negative)</semantics>
+         </simpleData>
+      </simpleDataTypes>
+   </dataTypes>
+
+   <notes>
+   </notes>
+</objectModel>
+
+
+
+
+
+
+
+
+
+
+<!--      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>-->
+<!--<objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">-->
+<!--    <modelIdentification>-->
+<!--        <name>FirePoC</name>-->
+<!--        <type>FOM</type>-->
+<!--        <version>1.0</version>-->
+<!--        <modificationDate>2024-04-29</modificationDate>-->
+<!--        <securityClassification>Unclassified</securityClassification>-->
+<!--        <description>Tralala.</description>-->
+<!--        <poc>-->
+<!--            <pocType>Primary author</pocType>-->
+<!--            <pocName>Bc. Marek Stastny</pocName>-->
+<!--        </poc>-->
+<!--    </modelIdentification>-->
+<!--    <objects>-->
+
+<!--&lt;!&ndash;        <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;            <name>HLAobjectRoot</name>&ndash;&gt;-->
+<!--&lt;!&ndash;            <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                <name>Food</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                <semantics>Products served at the restaurant</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <name>MainCourse</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <semantics>Principal dish</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <name>Drink</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <semantics>Liquid accompanyment to meal</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <attribute>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>NumberCups</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <dataType>DrinkCount</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <updateType>Conditional</updateType>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <updateCondition>Customer request</updateCondition>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <ownership>NoTransfer</ownership>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <dimensions>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <dimension>BarQuantity</dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </dimensions>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <transportation>HLAreliable</transportation>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <order>TimeStamp</order>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Number of drinks</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </attribute>&ndash;&gt;-->
+<!--&lt;!&ndash;                </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <name>Appetizers</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <semantics>Portion served before main course</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Soup</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Soup course</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Nachos</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Nachos</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <name>Entree</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <semantics>Principal dish</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Beef</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Beef entree</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Chicken</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Chicken entree</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Seafood</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Seafood entree</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <name>Fish</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <semantics>Fish of the day</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <name>Shrimp</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <semantics>Shrimp scampi</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <name>Lobster</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <semantics>Lobster thermador</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Pasta</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Pasta entree</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <name>SideDish</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <semantics>ala carte dishes</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Corn</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Corn side dish</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Broccoli</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Broccoli side dish</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>BakedPotato</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Baked potato side dish</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <name>Dessert</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <semantics>Deserts</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>Cake</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Cake dessert</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <name>IceCream</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <sharing>Subscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <semantics>Ice cream dessert</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <name>Chocolate</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <semantics>Chocolate ice cream</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <name>Vanilla</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <sharing>PublishSubscribe</sharing>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <semantics>vanilla ice cream</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;                </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;            </objectClass>&ndash;&gt;-->
+<!--&lt;!&ndash;        </objectClass>&ndash;&gt;-->
+<!--    </objects>-->
+<!--   <interactions>-->
+<!--      <interactionClass>-->
+<!--         <name>HLAinteractionRoot</name>-->
+<!--         <interactionClass>-->
+<!--            <name>CustomerTransactions</name>-->
+<!--            <sharing>PublishSubscribe</sharing>-->
+<!--            <dimensions/>-->
+<!--            <transportation>HLAreliable</transportation>-->
+<!--            <order>TimeStamp</order>-->
+<!--            <semantics>The base class of interactions between customers and employee</semantics>-->
+<!--         </interactionClass>-->
+<!--      </interactionClass>-->
+<!--   </interactions>-->
+
+
+
+
+<!--&lt;!&ndash;    <dimensions>&ndash;&gt;-->
+<!--&lt;!&ndash;        <dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;            <name>SodaFlavor</name>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>FlavorType</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <upperBound>3</upperBound>&ndash;&gt;-->
+<!--&lt;!&ndash;            <normalization>linearEnumerated (Flavor, [Cola, Orange, RootBeer])</normalization>&ndash;&gt;-->
+<!--&lt;!&ndash;            <value>[0..3)</value>&ndash;&gt;-->
+<!--&lt;!&ndash;        </dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;        <dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;            <name>BarQuantity</name>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>DrinkCount</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <upperBound>25</upperBound>&ndash;&gt;-->
+<!--&lt;!&ndash;            <normalization>linear (NumberCups, 1, 25)</normalization>&ndash;&gt;-->
+<!--&lt;!&ndash;            <value>[0)</value>&ndash;&gt;-->
+<!--&lt;!&ndash;        </dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;        <dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;            <name>WaiterId</name>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>EmplId</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <upperBound>20</upperBound>&ndash;&gt;-->
+<!--&lt;!&ndash;            <normalization>linear (WaiterId, 1, 20)</normalization>&ndash;&gt;-->
+<!--&lt;!&ndash;            <value>Excluded</value>&ndash;&gt;-->
+<!--&lt;!&ndash;        </dimension>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dimensions>&ndash;&gt;-->
+<!--&lt;!&ndash;    <tags>&ndash;&gt;-->
+<!--&lt;!&ndash;        <updateReflectTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>NA</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>NA</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </updateReflectTag>&ndash;&gt;-->
+<!--&lt;!&ndash;        <sendReceiveTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>NA</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>NA</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </sendReceiveTag>&ndash;&gt;-->
+<!--&lt;!&ndash;        <deleteRemoveTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>HLAASCIIstring</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>Reason for deletion</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </deleteRemoveTag>&ndash;&gt;-->
+<!--&lt;!&ndash;        <divestitureRequestTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>NA</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>NA</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </divestitureRequestTag>&ndash;&gt;-->
+<!--&lt;!&ndash;        <divestitureCompletionTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>NA</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>NA</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </divestitureCompletionTag>&ndash;&gt;-->
+<!--&lt;!&ndash;        <acquisitionRequestTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>NA</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>NA</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </acquisitionRequestTag>&ndash;&gt;-->
+<!--&lt;!&ndash;        <requestUpdateTag>&ndash;&gt;-->
+<!--&lt;!&ndash;            <dataType>NA</dataType>&ndash;&gt;-->
+<!--&lt;!&ndash;            <semantics>NA</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;        </requestUpdateTag>&ndash;&gt;-->
+<!--&lt;!&ndash;    </tags>&ndash;&gt;-->
+<!--&lt;!&ndash;    <dataTypes>&ndash;&gt;-->
+<!--&lt;!&ndash;		<basicDataRepresentations>&ndash;&gt;-->
+<!--&lt;!&ndash;			<basicData>&ndash;&gt;-->
+<!--&lt;!&ndash;				<name>UnsignedShort</name>&ndash;&gt;-->
+<!--&lt;!&ndash;				<size>16</size>&ndash;&gt;-->
+<!--&lt;!&ndash;				<interpretation>Integer in the range [0, 2^16 - 1]</interpretation>&ndash;&gt;-->
+<!--&lt;!&ndash;				<endian>Big</endian>&ndash;&gt;-->
+<!--&lt;!&ndash;				<encoding>16-bit unsigned integer.</encoding>&ndash;&gt;-->
+<!--&lt;!&ndash;			</basicData>&ndash;&gt;-->
+<!--&lt;!&ndash;		</basicDataRepresentations>&ndash;&gt;-->
+<!--&lt;!&ndash;        <simpleDataTypes>&ndash;&gt;-->
+<!--&lt;!&ndash;            <simpleData>&ndash;&gt;-->
+<!--&lt;!&ndash;                <name>DrinkCount</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                <representation>UnsignedShort</representation>&ndash;&gt;-->
+<!--&lt;!&ndash;                <units>Cups</units>&ndash;&gt;-->
+<!--&lt;!&ndash;                <resolution>1</resolution>&ndash;&gt;-->
+<!--&lt;!&ndash;                <accuracy>Perfect</accuracy>&ndash;&gt;-->
+<!--&lt;!&ndash;                <semantics>Measure of number of drinks</semantics>&ndash;&gt;-->
+<!--&lt;!&ndash;            </simpleData>&ndash;&gt;-->
+<!--&lt;!&ndash;        </simpleDataTypes>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dataTypes>&ndash;&gt;-->
+<!--&lt;!&ndash;    <notes/>&ndash;&gt;-->
+<!--</objectModel>-->
