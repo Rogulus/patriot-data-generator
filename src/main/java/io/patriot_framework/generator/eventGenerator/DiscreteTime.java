@@ -19,6 +19,14 @@ package io.patriot_framework.generator.eventGenerator;
 import java.util.Objects;
 
 public class DiscreteTime implements Time, Cloneable {
+
+    public DiscreteTime() {
+    }
+
+    public DiscreteTime(Integer value) {
+        time = value;
+    }
+
     @Override
     public Integer getValue() {
         return time;
