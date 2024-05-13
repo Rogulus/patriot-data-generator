@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-public class EventBusImpl implements EventBus{
+public class EventBusImpl implements EventBus, Runnable{
     private Set<Simulation> simulations = new HashSet<>();
     private TreeMap<Time, TimeActions> actionsQueue = new TreeMap<>();
     private Hashtable<String, Set<Simulation>> topicSubscribers = new Hashtable<>();  // topic to subscribers
@@ -83,8 +83,10 @@ public class EventBusImpl implements EventBus{
 
     private void deliverEvents(Set<Event> events) {
         for(Event event: events) {
-            for(Simulation receiver: topicSubscribers.get(event.topic)) {
-                receiver.receive(event.message, event.topic);
+            if(topicSubscribers.get(event.topic) != null) {  // todo udelat to nejak hezci
+                for (Simulation receiver : topicSubscribers.get(event.topic)) {
+                    receiver.receive(event.message, event.topic);
+                }
             }
         }
     }
@@ -97,6 +99,11 @@ public class EventBusImpl implements EventBus{
             awakeSimulations(entry.getValue().awakeApplicants);
             deliverEvents(entry.getValue().events);
             entry = actionsQueue.pollFirstEntry();
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
         }
     }
 

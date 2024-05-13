@@ -16,15 +16,40 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.device.impl.basicSensors.Default;
+import io.patriot_framework.generator.device.passive.sensors.Sensor;
+import io.patriot_framework.generator.eventGenerator.fire.FireSim;
+import io.patriot_framework.generator.eventGenerator.fire.RoomProbe;
+import io.patriot_framework.generator.eventGenerator.fire.RoomTempSim;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 public class EventBusTest {
 
     @Test
     public void test() {
-        EventBusImpl eventBus = new EventBusImpl();
-        SimulationImpl simulation = new SimulationImpl();
-        simulation.init(eventBus);
-        eventBus.run();
+        Conductor conductor = new Conductor(new EventBusImpl());
+
+        RoomProbe probe = new RoomProbe();
+        Sensor roomThermometer = new Default("roomThermometer", probe);
+
+        conductor.addSimulation(new RoomTempSim());
+        conductor.addSimulation(new FireSim());
+        conductor.addSimulation(probe);
+
+        Thread conductorThread = new Thread(conductor);
+        conductorThread.start();
+
+
+        for(int i = 0; i < 20; i++) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+            List<Data> temp = roomThermometer.requestData();
+        }
     }
 }

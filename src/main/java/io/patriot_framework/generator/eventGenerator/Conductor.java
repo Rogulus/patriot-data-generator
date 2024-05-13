@@ -16,9 +16,27 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
-public interface Simulation {
-    void awake();
-    void receive(Object message, String topic);
+import java.util.HashSet;
+import java.util.Set;
 
-    void setEventBus(EventBus eventBus);  // todo toto patri do jineho interface - interface ktery souvisi s Conductorem
+public class Conductor implements Runnable{
+    private EventBus eventBus;
+    private Set<SimulationBase> simulations = new HashSet<>();
+
+
+    public Conductor(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+
+    public void addSimulation(SimulationBase simulation) {
+        simulation.setEventBus(eventBus);
+        simulation.init();
+        simulations.add(simulation);
+    }
+
+    // todo rizeni casu
+
+    public void run() {
+        eventBus.run();
+    }
 }
