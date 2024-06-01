@@ -16,6 +16,8 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.Data;
+
 public abstract class SimulationBase implements Simulation{
     protected EventBus eventBus;
 
@@ -33,16 +35,16 @@ public abstract class SimulationBase implements Simulation{
         eventBus.registerAwake(this, time);
     }
 
-    protected void publish(Object message, String topic) {
+    protected void publish(Data message, String topic) {
         eventBus.publish(message, topic);
     }
 
-    protected void publishOnTime(Object message, String topic, Time time) {
+    protected void publishOnTime(Data message, String topic, Time time) {
         eventBus.publishOnTime(message, topic, time);
     }
 
     protected abstract void init();
-    public abstract void receive(Object message, String topic);
+    public abstract void receive(Data message, String topic);
     public abstract void awake();
 
 }

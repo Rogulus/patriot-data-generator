@@ -30,7 +30,8 @@ public class EventBusTest {
 
     @Test
     public void test() {
-        Conductor conductor = new Conductor(new EventBusImpl());
+        //todo udelat komentare
+        Conductor conductor = new Conductor();
 
         RoomProbe probe = new RoomProbe();
         Sensor roomThermometer = new Default("roomThermometer", probe);

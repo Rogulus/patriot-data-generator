@@ -14,18 +14,24 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator.fire;
+package io.patriot_framework.generator.eventGenerator.graphFire;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.coordinates.Coordinate;
 import io.patriot_framework.generator.dataFeed.DataFeed;
-import io.patriot_framework.generator.eventGenerator.EventBus;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
 
-
-public class RoomProbe extends SimulationBase implements DataFeed {
+public class RoomTempDataFeed extends SimulationBase implements DataFeed {
     private String label;
     private Integer lastValue = -2;
     private Integer temperature = -2;
+    private Coordinate myRoom;
+
+
+    public RoomTempDataFeed(Coordinate room) {
+        this.myRoom = room;
+    }
+
 
     public Data getNextValue(Object... params) {
         lastValue = temperature;
@@ -47,18 +53,22 @@ public class RoomProbe extends SimulationBase implements DataFeed {
         return this.label;
     }
 
+
     @Override
     public void init() {
-        subscribe("temperature");
+        subscribe("tempInfo");
     }
+
 
     @Override
-    public void awake() {
+    public void awake() {}
 
-    }
 
     @Override
     public void receive(Data message, String topic) {
-        temperature = message.get(Integer.class);
+        TempInfo info = message.get(TempInfo.class);
+        if(myRoom.equals(info.coordinate)) {
+            temperature = info.temperature;
+        }
     }
 }

@@ -14,28 +14,17 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator;
+package io.patriot_framework.generator.eventGenerator.graphFire;
 
-import java.util.HashSet;
-import java.util.Set;
+import io.patriot_framework.generator.coordinates.Coordinate;
 
-public class Conductor implements Runnable{
-    private EventBus eventBus;
-    private Set<SimulationBase> simulations = new HashSet<>();
+public class TempInfo {
+    public Coordinate coordinate;
+    public Integer temperature;
 
-    public Conductor() { // todo pridat moznost dat jinou implementaci
-        this.eventBus = new EventBusImpl();
+    public TempInfo(Coordinate coordinate, Integer temperature) {
+        this.coordinate = coordinate;
+        this.temperature = temperature;
     }
 
-    public void addSimulation(SimulationBase simulation) {
-        simulation.setEventBus(eventBus);
-        simulation.init();
-        simulations.add(simulation);
-    }
-
-    // todo rizeni casu
-
-    public void run() {
-        eventBus.run();
-    }
 }

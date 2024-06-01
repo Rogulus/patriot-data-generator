@@ -14,28 +14,32 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator;
+package io.patriot_framework.generator.eventGenerator.graphFire;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
-public class Conductor implements Runnable{
-    private EventBus eventBus;
-    private Set<SimulationBase> simulations = new HashSet<>();
+public class Room {
 
-    public Conductor() { // todo pridat moznost dat jinou implementaci
-        this.eventBus = new EventBusImpl();
+    public Room(String name, Integer temp) {
+        this.name = name;
+        this.temp = temp;
+        energy = 100; // todo uzivatel si muze zadat sam
     }
 
-    public void addSimulation(SimulationBase simulation) {
-        simulation.setEventBus(eventBus);
-        simulation.init();
-        simulations.add(simulation);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Room)) return false;
+        Room vertex = (Room) o;
+        return Objects.equals(name, vertex.name);
     }
 
-    // todo rizeni casu
-
-    public void run() {
-        eventBus.run();
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
+
+    public String name;
+    public Integer temp;
+    public Integer energy;
 }

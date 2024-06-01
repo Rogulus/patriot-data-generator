@@ -16,6 +16,7 @@
 
 package io.patriot_framework.generator.eventGenerator.fire;
 
+import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventGenerator.DiscreteTime;
 import io.patriot_framework.generator.eventGenerator.EventBus;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
@@ -27,17 +28,17 @@ public class FireSim extends SimulationBase {
 
     public void init() {
 //        registerAwake(new DiscreteTime(10));
-        publishOnTime(10, "tempDiff", new DiscreteTime(5));
-        publishOnTime(20, "tempDiff", new DiscreteTime(6));
-        publishOnTime(20, "tempDiff", new DiscreteTime(7));
-        publishOnTime(33, "tempDiff", new DiscreteTime(8));
-        publishOnTime(35, "tempDiff", new DiscreteTime(9));
-        publishOnTime(36, "tempDiff", new DiscreteTime(10));
-        publishOnTime(57, "tempDiff", new DiscreteTime(11));
-        publishOnTime(58, "tempDiff", new DiscreteTime(12));
-        publishOnTime(109, "tempDiff", new DiscreteTime(13));
-        publishOnTime(100, "tempDiff", new DiscreteTime(14));
-        publishOnTime(121, "tempDiff", new DiscreteTime(15));
+        publishOnTime(new Data(Integer.class, 10), "tempDiff", new DiscreteTime(5));
+        publishOnTime(new Data(Integer.class, 20), "tempDiff", new DiscreteTime(6));
+        publishOnTime(new Data(Integer.class, 30), "tempDiff", new DiscreteTime(7));
+        publishOnTime(new Data(Integer.class, 33), "tempDiff", new DiscreteTime(8));
+        publishOnTime(new Data(Integer.class, 35), "tempDiff", new DiscreteTime(9));
+        publishOnTime(new Data(Integer.class, 36), "tempDiff", new DiscreteTime(10));
+        publishOnTime(new Data(Integer.class, 57), "tempDiff", new DiscreteTime(11));
+        publishOnTime(new Data(Integer.class, 70), "tempDiff", new DiscreteTime(12));
+        publishOnTime(new Data(Integer.class, 109), "tempDiff", new DiscreteTime(13));
+        publishOnTime(new Data(Integer.class, 100), "tempDiff", new DiscreteTime(14));
+        publishOnTime(new Data(Integer.class, 121), "tempDiff", new DiscreteTime(15));
     }
 
     @Override
@@ -45,6 +46,6 @@ public class FireSim extends SimulationBase {
     }
 
     @Override
-    public void receive(Object message, String topic) {
+    public void receive(Data message, String topic) {
     }
 }
