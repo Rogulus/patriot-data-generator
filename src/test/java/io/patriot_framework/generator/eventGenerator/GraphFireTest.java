@@ -16,14 +16,20 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.coordinates.UndirectedGraphCoordinate;
+import io.patriot_framework.generator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.device.impl.basicSensors.Default;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
 import io.patriot_framework.generator.eventGenerator.graphFire.Room;
 import io.patriot_framework.generator.eventGenerator.graphFire.RoomTempDataFeed;
+import io.patriot_framework.generator.eventGenerator.graphFire.TemperatureDiffuser;
+import org.apache.lucene.analysis.da.DanishAnalyzer;
 import org.jgrapht.Graph;
 import org.junit.jupiter.api.Test;
 import org.jgrapht.graph.*;
+
+import java.util.List;
 
 // todo snad by to slo udelat templatovane na typ coordinatu
 
@@ -31,7 +37,7 @@ public class GraphFireTest {
     @Test
     public void test() {
 
-        UndirectedGraphCoordinate livingRoomCoordinate = new UndirectedGraphCoordinate.UndirectedGraphBuilder()
+        UndirectedGraphSpace houseSpace = new UndirectedGraphSpace.UndirectedGraphSpaceBuilder()
                 .addEdge("garage", "entrance")
                 .addEdge("garage", "corridor")
                 .addEdge("garage", "livingRoom")
@@ -40,63 +46,78 @@ public class GraphFireTest {
                 .addEdge("corridor", "workroom")
                 .addEdge("livingRoom", "bedroom")
                 .addEdge("workroom", "bedroom")
-                .build("livingRoom");
+                .build();
 
-        RoomTempDataFeed livingRoomDF = new RoomTempDataFeed(livingRoomCoordinate); // todo asi to chce reprezentaci grafu
-        RoomTempDataFeed garageDF = new RoomTempDataFeed(livingRoomCoordinate.getCoordinate("garage"));
-        RoomTempDataFeed corridorDF = new RoomTempDataFeed(livingRoomCoordinate.getCoordinate("corridor"));
+        houseSpace.getAll().forEach(x -> x.setData("temperature", new Data(Integer.class, 20)));
+
+        houseSpace.getCoordinate("livingRoom").setData("temperature", new Data(Integer.class, 100));
+
+        RoomTempDataFeed livingRoomDF = new RoomTempDataFeed(houseSpace.getCoordinate("livingRoom"));
+        RoomTempDataFeed garageDF = new RoomTempDataFeed(houseSpace.getCoordinate("garage"));
+        RoomTempDataFeed corridorDF = new RoomTempDataFeed(houseSpace.getCoordinate("corridor"));
 
         Sensor livingRoomThermometer = new Default("livingRoomThermometer", livingRoomDF);
         Sensor garageThermometer = new Default("garageThermometer", garageDF);
         Sensor corridorThermometer = new Default("corridorThermometer", corridorDF);
 
+        TemperatureDiffuser diffuser = new TemperatureDiffuser(houseSpace);
+
         Conductor conductor = new Conductor();
+        conductor.addSimulation(diffuser);
+
         conductor.addSimulation(livingRoomDF);
         conductor.addSimulation(garageDF);
         conductor.addSimulation(corridorDF);
-
-
         // todo zobecnit fire na cellular automat s nastavitelnou sirkou okoli?
-
-
-
-
-
-
-
-    }
-}
-
-
- */
-
-package io.patriot_framework.generator.eventGenerat
-    public void test() {
-        //todo udelat komentare
-        Conductor conductor = new Conductor();
-
-        RoomProbe probe = new RoomProbe();
-        Sensor roomThermometer = new Default("roomThermometer", probe);
-
-        conductor.addSimulation(new RoomTempSim());
-        conductor.addSimulation(new FireSim());
-        conductor.addSimulation(probe);
 
         Thread conductorThread = new Thread(conductor);
         conductorThread.start();
 
-
         for(int i = 0; i < 20; i++) {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 System.out.println(e);
             }
-            List<Data> temp = roomThermometer.requestData();
+            List<Data> temp = livingRoomThermometer.requestData();
+            System.out.println(temp.get(0));
+
+            List<Data> temp2 = garageThermometer.requestData();
+            System.out.println(temp2.get(0));
         }
     }
 }
 
+//
+// */
+//
+//package io.patriot_framework.generator.eventGenerat
+//    public void test() {
+//        //todo udelat komentare
+//        Conductor conductor = new Conductor();
+//
+//        RoomProbe probe = new RoomProbe();
+//        Sensor roomThermometer = new Default("roomThermometer", probe);
+//
+//        conductor.addSimulation(new RoomTempSim());
+//        conductor.addSimulation(new FireSim());
+//        conductor.addSimulation(probe);
+//
+//        Thread conductorThread = new Thread(conductor);
+//        conductorThread.start();
+//
+//
+//        for(int i = 0; i < 20; i++) {
+//            try {
+//                Thread.sleep(3000);
+//            } catch (InterruptedException e) {
+//                System.out.println(e);
+//            }
+//            List<Data> temp = roomThermometer.requestData();
+//        }
+//    }
+//}
+//
 
 //        Graph<Room, DefaultEdge> houseSpace = new DefaultUndirectedGraph<>(DefaultEdge.class);
 //        //todo definovat v package interface zprav ktere se predavaji
