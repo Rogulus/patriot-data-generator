@@ -27,87 +27,71 @@ import org.jgrapht.graph.DefaultUndirectedGraph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
 import static org.jgrapht.Graphs.neighborListOf;
 
 // todo udelat vahovy graf a toto bude specialni pripad
+
+
+// todo pridat vertex name and data
 public class UndirectedGraphCoordinate implements Coordinate<UndirectedGraphCoordinate>{
-    private Graph<String, DefaultEdge> graph;
-    private String vertex;
+    private UndirectedGraphSpace space;
+    private String coorinateName;
+    private HashMap<String, Data> data;
 
 
-    private UndirectedGraphCoordinate(Graph<String, DefaultEdge> graph, String vertex) {
-        this.graph = graph;
-        this.vertex = vertex;
+    public UndirectedGraphCoordinate(UndirectedGraphSpace graphSpace, String coordinateName) {
+        data = new HashMap<>();
+        this.space = graphSpace;
+        this.coorinateName = coordinateName;
     }
 
 
     @Override
     public double distance(UndirectedGraphCoordinate other) {
-        DijkstraShortestPath<String, DefaultEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
-        GraphPath<String, DefaultEdge> path = dijkstraAlg.getPath(vertex, other.vertex);
-        return path.getLength();
-    }
-
-
-    public UndirectedGraphCoordinate getCoordinate(String vertex) {
-        if( ! graph.containsVertex(vertex)) {
-            throw new RuntimeException("TODO"); //todo
+        if (! space.equals(other.space)) {
+            throw new IllegalArgumentException("TODO"); // todo
         }
-        return new UndirectedGraphCoordinate(graph, vertex);
+        return space.distance(coorinateName, other.coorinateName);
     }
 
 
-    private UndirectedGraphCoordinate convertToCoordinate(String neighbor) {
-        return new UndirectedGraphCoordinate(graph, neighbor);
+    public UndirectedGraphCoordinate getCoordinate(String coordinateName) {
+        return space.getCoordinate(coordinateName);
     }
 
 
     public HashSet<UndirectedGraphCoordinate> getNeighbors() {
-        return  Graphs.neighborListOf(graph, vertex)
-                .stream()
-                .map(this::convertToCoordinate)
-                .collect(Collectors.toCollection(HashSet::new));
+        return space.getNeighbors(coorinateName);
     }
 
+    public Data getData(String dataName) { // todo osetrit neplatne vstupy
+        return data.get(dataName);
+    }
 
+    public void setData(String dataName, Data data) {
+        this.data.put(dataName, data);
+    }
 
+    public void deleteData(String dataName) {
+        data.remove(dataName);
+    }
 
-//    public class UndirectedGraphSpace {
-//        private Graph<String, DefaultEdge> graph;
-//
-//
-//
-//        private HashSet<UndirectedGraphCoordinate> dataMap;
-//
-//        Data data;
-//        String result = data.
-//
-//
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UndirectedGraphCoordinate)) return false;
+        UndirectedGraphCoordinate that = (UndirectedGraphCoordinate) o;
+        return space.equals(that.space) && coorinateName.equals(that.coorinateName);
+    }
 
-
-    public static class UndirectedGraphBuilder {
-        private Graph<String, DefaultEdge> graph;
-
-        public UndirectedGraphBuilder() {
-            this.graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
-        }
-
-        public UndirectedGraphBuilder addEdge(String v1, String v2) {
-            if(!graph.containsVertex(v1)) {
-                graph.addVertex(v1);
-            }
-            if(!graph.containsVertex(v2)) {
-                graph.addVertex(v2);
-            }
-            graph.addEdge(v1, v2);
-            return this;
-        }
-
-        public UndirectedGraphCoordinate build(String vertex) {
-            return new UndirectedGraphCoordinate(graph, vertex);
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(space, coorinateName);
     }
 }
+

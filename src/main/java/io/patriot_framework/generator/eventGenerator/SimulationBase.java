@@ -43,7 +43,7 @@ public abstract class SimulationBase implements Simulation{
         eventBus.publishOnTime(message, topic, time);
     }
 
-    protected abstract void init();
+    public abstract void init();
     public abstract void receive(Data message, String topic);
     public abstract void awake();
 
