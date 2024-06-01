@@ -16,6 +16,8 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.Data;
+
 public interface EventBus {
     Time getTime();
     void registerSimulation(Simulation simulation);
@@ -23,10 +25,9 @@ public interface EventBus {
 
     void registerAwake(Simulation simulation , Time time);
 
-    void publish(Object message, String topic);
-    void publishOnTime(Object message, String topic, Time time);
+    void publish(Data message, String topic);
+    void publishOnTime(Data message, String topic, Time time);
     void subscribe(Simulation simulation, String topic);
     public void run();
-
 
 }

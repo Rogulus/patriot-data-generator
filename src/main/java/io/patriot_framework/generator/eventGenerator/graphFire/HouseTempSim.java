@@ -14,27 +14,43 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator.fire;
+package io.patriot_framework.generator.eventGenerator.graphFire;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.coordinates.Coordinate;
 import io.patriot_framework.generator.eventGenerator.DiscreteTime;
-import io.patriot_framework.generator.eventGenerator.EventBus;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
 import io.patriot_framework.generator.eventGenerator.Time;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
 
-public class RoomTempSim extends SimulationBase {
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
-    Time time = new DiscreteTime();
-    Integer temperature = 0;
+public class HouseTempSim  extends SimulationBase {
+    private HashMap<Coordinate, Integer> heatMap = new HashMap<Coordinate, Integer>();
+
+
+    private Graph<Room, DefaultEdge> houseSpace;
+    private Time time = new DiscreteTime();
+
+    public HouseTempSim(List<Coordinate> space) {
+        for(Coordinate coordinate: space) {
+            heatMap.put(coordinate, 20);
+        }
+    }
 
 
     @Override
     public void init() { // todo pridat do interface spojeneho s conductorem
-        subscribe( "temperature");
         subscribe("tempDiff");
-        time.setValue(3);
+        time.setValue(1);
         registerAwake(time);
-        publishOnTime(new Data(Integer.class, temperature), "temperature", time);
+        for(Map.Entry<Coordinate, Integer> entry : heatMap.entrySet()) {
+            publish(new Data(TempInfo.class, new TempInfo(entry.getKey(), entry.getValue())), "tempInfo");
+        }
     }
 
     @Override
@@ -42,7 +58,9 @@ public class RoomTempSim extends SimulationBase {
         time = eventBus.getTime();
         time.setValue(time.getValue() + 3);
         registerAwake(time);
-        publish(new Data(Integer.class, temperature), "temperature");
+        for(Map.Entry<Coordinate, Integer> entry : heatMap.entrySet()) {
+            publish(new Data(TempInfo.class, new TempInfo(entry.getKey(), entry.getValue())), "tempInfo");
+        }
     }
 
     @Override
@@ -54,10 +72,15 @@ public class RoomTempSim extends SimulationBase {
 //                 newTime.setValue(time.getValue() + 3);
 //                 publishOnTime(temperature + 10, "temperature", newTime);
 //                 System.out.println("temperature: " + temperature);
-                 break;
+                break;
             case "tempDiff":
-                Integer tempDif = message.get(Integer.class);
-                temperature += tempDif;
+                TempDiff tempDiff = message.get(TempDiff.class);
+                Integer temp = heatMap.get(tempDiff.coordinate);
+                heatMap.put(tempDiff.coordinate, temp + tempDiff.tempDiff);
         }
     }
+
+
+
+
 }

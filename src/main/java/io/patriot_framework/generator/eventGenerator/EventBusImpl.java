@@ -16,6 +16,8 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.Data;
+
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
@@ -63,12 +65,12 @@ public class EventBusImpl implements EventBus, Runnable{
     }
 
     @Override
-    public void publish(Object message, String topic) {
+    public void publish(Data message, String topic) {
         publishOnTime(message, topic, currentTime);
     }
 
     @Override
-    public void publishOnTime(Object message, String topic, Time time) {
+    public void publishOnTime(Data message, String topic, Time time) {
         TimeActions actions = actionsQueue.computeIfAbsent(time, k -> new TimeActions());
         actions.events.add(new Event(message, topic));
     }
@@ -114,9 +116,9 @@ public class EventBusImpl implements EventBus, Runnable{
     }
 
     public class Event {
-        public Object message;
+        public Data message;
         public String topic;
-        public Event(Object message, String topic) {
+        public Event(Data message, String topic) {
             this.message = message;
             this.topic = topic;
         }

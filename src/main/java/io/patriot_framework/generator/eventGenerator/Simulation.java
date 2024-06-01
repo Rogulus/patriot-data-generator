@@ -16,9 +16,11 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.Data;
+
 public interface Simulation {
     void awake();
-    void receive(Object message, String topic);
+    void receive(Data message, String topic);
 
     void setEventBus(EventBus eventBus);  // todo toto patri do jineho interface - interface ktery souvisi s Conductorem
 }
