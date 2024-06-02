@@ -26,19 +26,20 @@ import io.patriot_framework.generator.eventGenerator.Time;
 import java.util.HashSet;
 
 public class TemperatureDiffuser extends SimulationBase {
-    Time time = new DiscreteTime();
+    private Time time = new DiscreteTime();
     private UndirectedGraphSpace space;
 
     public TemperatureDiffuser(UndirectedGraphSpace space) {
         this.space = space;
+
         space.getAll().stream().forEach(coordinate -> {
             Integer temp = coordinate.getData("temperature").get(Integer.class);
-            coordinate.setData("new-temp", new Data(Integer.class));
+            coordinate.setData("new-temp", new Data(Integer.class, 0));
         });
     }
 
     public void init() {
-        registerAwake(new DiscreteTime(1));
+        registerAwake(new DiscreteTime(0));
     }
 
     @Override
@@ -46,15 +47,19 @@ public class TemperatureDiffuser extends SimulationBase {
         time = eventBus.getTime();
         time.setValue(time.getValue() + 1);
         registerAwake(time);
-        space.getAll().forEach(coordinate -> {
+
+        space.getAll().forEach((coordinate) -> {
             HashSet<UndirectedGraphCoordinate> neighbors = coordinate.getNeighbors();
+
             int sum = neighbors.stream().mapToInt(x -> x.getData("temperature").get(Integer.class)).sum();
-            Integer newTemp = sum / neighbors.size();
+            Integer nSum = sum / neighbors.size();
+            Integer myTemp = coordinate.getData("temperature").get(Integer.class);
+            int newTemp = (myTemp * 10 + nSum) / 11;
             coordinate.setData("new-temp", new Data(Integer.class, newTemp));
         });
 
         space.getAll().forEach(coordinate -> {
-            coordinate.setData("temperature", coordinate.getData("new-temperature"));
+            coordinate.setData("temperature", coordinate.getData("new-temp"));
         });
     }
 

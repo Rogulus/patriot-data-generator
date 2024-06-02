@@ -27,6 +27,7 @@ import org.jgrapht.graph.DefaultUndirectedGraph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -92,6 +93,27 @@ public class UndirectedGraphCoordinate implements Coordinate<UndirectedGraphCoor
     @Override
     public int hashCode() {
         return Objects.hash(space, coorinateName);
+    }
+
+    @Override
+    public String toString() {
+
+        return "Coordinate: " + coorinateName + "\n" + mapToString(data);
+    }
+
+    public String getName() {
+        return coorinateName;
+    }
+
+    public static String mapToString(Map<String, Data> map) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Data> entry : map.entrySet()) {
+            sb.append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 }
 

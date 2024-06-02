@@ -21,6 +21,8 @@ import io.patriot_framework.generator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.device.impl.basicSensors.Default;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
+import io.patriot_framework.generator.eventGenerator.graphFire.ChildWithMatches;
+import io.patriot_framework.generator.eventGenerator.graphFire.Fire;
 import io.patriot_framework.generator.eventGenerator.graphFire.Room;
 import io.patriot_framework.generator.eventGenerator.graphFire.RoomTempDataFeed;
 import io.patriot_framework.generator.eventGenerator.graphFire.TemperatureDiffuser;
@@ -29,9 +31,12 @@ import org.jgrapht.Graph;
 import org.junit.jupiter.api.Test;
 import org.jgrapht.graph.*;
 
+import javax.sound.midi.Soundbank;
+import java.util.HashMap;
 import java.util.List;
 
 // todo snad by to slo udelat templatovane na typ coordinatu
+// nebo udelat vuci interface nejakeho coordinatu
 
 public class GraphFireTest {
     @Test
@@ -50,8 +55,6 @@ public class GraphFireTest {
 
         houseSpace.getAll().forEach(x -> x.setData("temperature", new Data(Integer.class, 20)));
 
-        houseSpace.getCoordinate("livingRoom").setData("temperature", new Data(Integer.class, 100));
-
         RoomTempDataFeed livingRoomDF = new RoomTempDataFeed(houseSpace.getCoordinate("livingRoom"));
         RoomTempDataFeed garageDF = new RoomTempDataFeed(houseSpace.getCoordinate("garage"));
         RoomTempDataFeed corridorDF = new RoomTempDataFeed(houseSpace.getCoordinate("corridor"));
@@ -61,9 +64,15 @@ public class GraphFireTest {
         Sensor corridorThermometer = new Default("corridorThermometer", corridorDF);
 
         TemperatureDiffuser diffuser = new TemperatureDiffuser(houseSpace);
+        Fire fire = new Fire(houseSpace, 300);
+        ChildWithMatches toby = new ChildWithMatches(houseSpace.getCoordinate("livingRoom"));
+        ChildWithMatches sandra = new ChildWithMatches(houseSpace.getCoordinate("garage"));
 
         Conductor conductor = new Conductor();
         conductor.addSimulation(diffuser);
+        conductor.addSimulation(fire);
+        conductor.addSimulation(toby);
+        conductor.addSimulation(sandra);
 
         conductor.addSimulation(livingRoomDF);
         conductor.addSimulation(garageDF);
@@ -73,67 +82,25 @@ public class GraphFireTest {
         Thread conductorThread = new Thread(conductor);
         conductorThread.start();
 
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 120; i++) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 System.out.println(e);
             }
+            System.out.println("Time: " + i);
+            System.out.println();
+
+            houseSpace.getAll().forEach(x -> System.out.println(x));
+
             List<Data> temp = livingRoomThermometer.requestData();
             System.out.println(temp.get(0));
+
+            List<Data> temp1 = corridorThermometer.requestData();
+            System.out.println(temp1.get(0));
 
             List<Data> temp2 = garageThermometer.requestData();
             System.out.println(temp2.get(0));
         }
     }
 }
-
-//
-// */
-//
-//package io.patriot_framework.generator.eventGenerat
-//    public void test() {
-//        //todo udelat komentare
-//        Conductor conductor = new Conductor();
-//
-//        RoomProbe probe = new RoomProbe();
-//        Sensor roomThermometer = new Default("roomThermometer", probe);
-//
-//        conductor.addSimulation(new RoomTempSim());
-//        conductor.addSimulation(new FireSim());
-//        conductor.addSimulation(probe);
-//
-//        Thread conductorThread = new Thread(conductor);
-//        conductorThread.start();
-//
-//
-//        for(int i = 0; i < 20; i++) {
-//            try {
-//                Thread.sleep(3000);
-//            } catch (InterruptedException e) {
-//                System.out.println(e);
-//            }
-//            List<Data> temp = roomThermometer.requestData();
-//        }
-//    }
-//}
-//
-
-//        Graph<Room, DefaultEdge> houseSpace = new DefaultUndirectedGraph<>(DefaultEdge.class);
-//        //todo definovat v package interface zprav ktere se predavaji
-//        //todo topic by mela byt classa
-//        Room garage = new Room("garage", 20);
-//        Room entrance = new Room("entrance", 20);
-//        Room corridor = new Room("corridor", 20);
-//        Room livingRoom = new Room("livingRoom", 20);
-//        Room workroom = new Room("workroom", 20);
-//        Room bedroom = new Room("bedroom", 20);
-//
-//        houseSpace.addEdge(garage, entrance);
-//        houseSpace.addEdge(garage, corridor);
-//        houseSpace.addEdge(garage, livingRoom);
-//        houseSpace.addEdge(entrance, corridor);
-//        houseSpace.addEdge(corridor, livingRoom);
-//        houseSpace.addEdge(corridor, workroom);
-//        houseSpace.addEdge(livingRoom, bedroom);
-//        houseSpace.addEdge(workroom, bedroom);
