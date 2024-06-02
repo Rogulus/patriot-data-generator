@@ -18,6 +18,7 @@ package io.patriot_framework.generator.eventGenerator.graphFire;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.coordinates.Coordinate;
+import io.patriot_framework.generator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.dataFeed.DataFeed;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
 
@@ -25,15 +26,16 @@ public class RoomTempDataFeed extends SimulationBase implements DataFeed {
     private String label;
     private Integer lastValue = -2;
     private Integer temperature = -2;
-    private Coordinate myRoom;
+    private UndirectedGraphCoordinate myRoom;
 
 
-    public RoomTempDataFeed(Coordinate room) {
+    public RoomTempDataFeed(UndirectedGraphCoordinate room) {
         this.myRoom = room;
     }
 
 
     public Data getNextValue(Object... params) {
+        temperature = myRoom.getData("temperature").get(Integer.class);
         lastValue = temperature;
         return new Data(Integer.class, temperature);
     }
@@ -66,9 +68,9 @@ public class RoomTempDataFeed extends SimulationBase implements DataFeed {
 
     @Override
     public void receive(Data message, String topic) {
-        TempInfo info = message.get(TempInfo.class);
-        if(myRoom.equals(info.coordinate)) {
-            temperature = info.temperature;
-        }
+//        TempInfo info = message.get(TempInfo.class);
+//        if(myRoom.equals(info.coordinate)) {
+//            temperature = info.temperature;
+//        }
     }
 }
