@@ -74,5 +74,4 @@ public class ClientResourceHandler {
 
         ccc.post(toggleEndpoint, null);
     }
-
 }

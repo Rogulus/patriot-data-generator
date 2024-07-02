@@ -18,6 +18,7 @@ package io.patriot_framework.generator.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.patriot_framework.generator.dataFeed.DataFeed;
 import io.patriot_framework.generator.device.Device;
 import io.patriot_framework.generator.device.active.Active;
 
@@ -149,6 +150,66 @@ public class JSONSerializer {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(content, Active.class);
+        } catch (IOException e) {
+            throw new SerializationException(e);
+        }
+    }
+
+    /**
+     * Serializes the DataFeed and returns the String representation of serialized data feed.
+     *
+     * @param dataFeed data feed to serialize
+     * @return String containing JSON representation of the DataFeed
+     */
+    public static String serializeDataFeed(DataFeed dataFeed) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(dataFeed);
+        } catch (JsonProcessingException e) {
+            throw new SerializationException(e);
+        }
+    }
+
+    /**
+     * Serializes the DataFeed and returns the String representation of serialized data feed.
+     *
+     * @param dataFeed data feed to serialize
+     * @param file   File where to write the serialized device data
+     */
+    public static void serializeDataFeed(DataFeed dataFeed, File file) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.writeValue(file, dataFeed);
+        } catch (IOException e) {
+            throw new SerializationException(e);
+        }
+    }
+
+    /**
+     * Deserializes the file containing serialized data feed to the DataFeed object.
+     *
+     * @param file File containing serialized data feed in the JSON format
+     * @return DataFeed object of given file
+     */
+    public static DataFeed deserializeDataFeed(File file) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(file, DataFeed.class);
+        } catch (IOException e) {
+            throw new SerializationException(e);
+        }
+    }
+
+    /**
+     * Deserializes string containing serialized data feed to the DataFeed object..
+     *
+     * @param content String containing serialized data feed in the JSON format
+     * @return DataFeed object of given String
+     */
+    public static DataFeed deserializeDataFeed(String content) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(content, DataFeed.class);
         } catch (IOException e) {
             throw new SerializationException(e);
         }

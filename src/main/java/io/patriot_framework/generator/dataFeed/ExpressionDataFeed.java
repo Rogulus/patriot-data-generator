@@ -22,7 +22,7 @@ import net.objecthunter.exp4j.Expression;
 import java.util.Set;
 
 /**
- * Feed that uses Expression library to calculate data streems.
+ * Feed that uses Expression library to calculate data streams.
  */
 public class ExpressionDataFeed implements DataFeed {
 

@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * @author <a href="mailto:jakub.smadis@gmail.com">Jakub Smadis</a>
@@ -50,13 +51,21 @@ public class SensorSerializationTest {
     }
 
     @Test
-    void serializeThermometer() {
+    void serializeThermometer() throws IOException {
         DataFeed df = new NormalDistVariateDataFeed(18, 2);
+        df.setLabel("kokino");
         NetworkAdapter na = new Rest("https://httpbin.org/post", new JSONWrapper());
         Device sensor = new Thermometer("simpleThermometer", df);
         sensor.setNetworkAdapter(na);
 
         JSONSerializer.serialize(sensor, file);
+
+        String content = new String(Files.readAllBytes(file.toPath()));
+
+        System.out.println("EHM");
+        System.out.println(content);
+        System.out.println("EHM");
+
         Device another = JSONSerializer.deserializeDevice(file);
         assert (another.equals(sensor));
     }

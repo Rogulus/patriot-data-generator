@@ -118,5 +118,4 @@ public class CoapControlClient {
     public void setUri(String uri) {
         this.uri = uri;
     }
-
 }
