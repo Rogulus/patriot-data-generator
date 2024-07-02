@@ -18,7 +18,6 @@ package io.patriot_framework.generator.eventGenerator.fire;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.dataFeed.DataFeed;
-import io.patriot_framework.generator.eventGenerator.EventBus;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
 
 

@@ -14,9 +14,13 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator;
+package io.patriot_framework.generator.eventGenerator.eventBus;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.eventGenerator.DiscreteTime;
+import io.patriot_framework.generator.eventGenerator.Simulation;
+import io.patriot_framework.generator.eventGenerator.Time;
+import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
 
 import java.util.HashSet;
 import java.util.Hashtable;

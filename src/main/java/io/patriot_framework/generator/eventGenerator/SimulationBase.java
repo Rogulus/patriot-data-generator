@@ -17,6 +17,7 @@
 package io.patriot_framework.generator.eventGenerator;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
 
 public abstract class SimulationBase implements Simulation{
     protected EventBus eventBus;

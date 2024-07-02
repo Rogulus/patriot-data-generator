@@ -14,14 +14,16 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator;
+package io.patriot_framework.generator.eventGenerator.simulationAdapter;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
 
-public interface Simulation {
-    void awake();
-    void receive(Data message, String topic);
+import java.util.function.BiConsumer;
 
-    void setEventBus(EventBus eventBus);  // todo toto patri do jineho interface - interface ktery souvisi s Conductorem
+
+// kdyz bude zavolane update data tak zodpovida za to, ze se dostanou do clienta, jak casto se budou data obnovovat je na adapteru
+public interface SimulationAdapterServer {
+    void updateData(Data data);
+    void setSimulationAdapter(SimulationAdapter simulationAdapter);
+    SimulationAdapterClient getClient();
 }

@@ -16,6 +16,9 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
+import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
+import io.patriot_framework.generator.eventGenerator.eventBus.EventBusImpl;
+
 import java.util.HashSet;
 import java.util.Set;
 

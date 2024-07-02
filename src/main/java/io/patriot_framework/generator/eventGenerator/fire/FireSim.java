@@ -18,9 +18,7 @@ package io.patriot_framework.generator.eventGenerator.fire;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventGenerator.DiscreteTime;
-import io.patriot_framework.generator.eventGenerator.EventBus;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
-import io.patriot_framework.generator.eventGenerator.Time;
 
 
 public class FireSim extends SimulationBase {

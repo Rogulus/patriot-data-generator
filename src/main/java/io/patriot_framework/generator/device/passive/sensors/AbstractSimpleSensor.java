@@ -42,7 +42,6 @@ public abstract class AbstractSimpleSensor extends AbstractSensor implements Sim
         }
         super.addDataFeed(dataFeed);
     }
-
     @Override
     public DataFeed getDataFeed() {
         return super.getDataFeeds().get(0);

@@ -14,20 +14,31 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator;
+package io.patriot_framework.generator.eventGenerator.simulationAdapter.localImplementation;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.eventGenerator.simulationAdapter.SimulationAdapterClient;
 
-public interface EventBus {
-    Time getTime();
-    void registerSimulation(Simulation simulation);
-    void unregister(Simulation simulation);
+public class LocalSimulationAdapterClient implements SimulationAdapterClient {
+    private Data actualData;
 
-    void registerAwake(Simulation simulation , Time time);
+    public LocalSimulationAdapterClient() {
 
-    void publish(Data message, String topic);
-    void publishOnTime(Data message, String topic, Time time);
-    void subscribe(Simulation simulation, String topic);
-    public void run();
+    }
+
+    @Override
+    public Data getData() {
+        return null;
+    }
+
+    @Override
+    public void SendData(Data data) {
+
+    }
+
+    // method for server
+    void deliverData(Data data) {
+        this.actualData = data;
+    }
 
 }

@@ -14,14 +14,22 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventGenerator;
+package io.patriot_framework.generator.eventGenerator.eventBus;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
+import io.patriot_framework.generator.eventGenerator.Simulation;
+import io.patriot_framework.generator.eventGenerator.Time;
 
-public interface Simulation {
-    void awake();
-    void receive(Data message, String topic);
+public interface EventBus {
+    Time getTime();
+    void registerSimulation(Simulation simulation);
+    void unregister(Simulation simulation);
 
-    void setEventBus(EventBus eventBus);  // todo toto patri do jineho interface - interface ktery souvisi s Conductorem
+    void registerAwake(Simulation simulation , Time time);
+
+    void publish(Data message, String topic);
+    void publishOnTime(Data message, String topic, Time time);
+    void subscribe(Simulation simulation, String topic);
+    public void run();
+
 }
