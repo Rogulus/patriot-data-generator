@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  *
  * For example see: {@link CoapControlClient#getDevice(String)}
  */
-public class ClientResourceHandler {
+public class CoapDeviceHandler {
 
     /**
      * Label of Device which endpoints are discovered
@@ -50,7 +50,7 @@ public class ClientResourceHandler {
      */
     private CoapControlClient ccc;
 
-    public ClientResourceHandler(CoapControlClient ccc, Set<String> deviceEndpoints, String deviceLabel) {
+    public CoapDeviceHandler(CoapControlClient ccc, Set<String> deviceEndpoints, String deviceLabel) {
         this.deviceEndpoints = deviceEndpoints;
         this.ccc = ccc;
         this.deviceLabel = deviceLabel;

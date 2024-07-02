@@ -80,10 +80,13 @@ public class CoapControlClient {
         return client.post(payload, MediaTypeRegistry.TEXT_PLAIN);
     }
 
+//    put Coap todo
+
+
     /**
      * Gets all resources/endpoints for specified label of an Device.
      * To achieve user friendly workflow, we implemented client-server communication with
-     * Chain of Responsibility Design Pattern. Therefore this method returns {@link ClientResourceHandler},
+     * Chain of Responsibility Design Pattern. Therefore this method returns {@link CoapDeviceHandler},
      * which is responsible for more accurate functionality.
      *
      * Example:
@@ -99,7 +102,7 @@ public class CoapControlClient {
      * @throws ConnectorException if an issue specific to the connector occurred
      * @throws IOException if any other issue (not specific to the connector) occurred
      */
-    public ClientResourceHandler getDevice(String label) throws ConnectorException, IOException {
+    public CoapDeviceHandler getDevice(String label) throws ConnectorException, IOException {
         Pattern pattern = Pattern.compile(String.format("/%s(/|$)", label));
 
         Set<String> deviceEndpoints = client.discover()
@@ -108,7 +111,7 @@ public class CoapControlClient {
                 .filter(pattern.asPredicate())
                 .collect(Collectors.toSet());
 
-        return new ClientResourceHandler(this, deviceEndpoints, label);
+        return new CoapDeviceHandler(this, deviceEndpoints, label);
     }
 
     public String getUri() {

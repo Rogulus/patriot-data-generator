@@ -168,16 +168,18 @@ public class DataFeedResource extends CoapResource {
             if (dataFeed.getLabel().equals(label)) {
                 sensor.removeDataFeed(dataFeed);
                 sensor.addDataFeed(newDataFeed);
-                replaced = true;
-                break;
+                exchange.respond(CoAP.ResponseCode.CHANGED);
+                return;
             }
         }
 
-        if (replaced) {
-            exchange.respond(CoAP.ResponseCode.CHANGED);
-        } else {
-            exchange.respond(CoAP.ResponseCode.NOT_FOUND, "Data feed with given label not found");
+        try {
+            sensor.addDataFeed(newDataFeed);
+            exchange.respond(CoAP.ResponseCode.CREATED);
+        } catch (UnsupportedOperationException exception) {
+            exchange.respond(CoAP.ResponseCode.CONFLICT, exception.getMessage());
         }
+
     }
 
     @Override

@@ -168,7 +168,6 @@ public class DataFeedResourceTest {
         newDataFeed.setLabel(dataFeedLabel);
         requestBody =  JSONSerializer.serializeDataFeed(newDataFeed);
         response = sendPutRequest(client, requestBody);
-        System.out.println(response.getResponseText());
         assertEquals(CoAP.ResponseCode.CHANGED, response.getCode());
         assertEquals(newTemperature, t1.requestData().get(0).get(Double.class));
     }
