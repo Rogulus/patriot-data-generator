@@ -17,6 +17,10 @@
 package io.patriot_framework.generator.controll.client;
 
 import io.patriot_framework.generator.dataFeed.DataFeed;
+import io.patriot_framework.generator.utils.JSONSerializer;
+import org.eclipse.californium.elements.exception.ConnectorException;
+
+import java.io.IOException;
 
 public class CoapDataFeedHandler {
     CoapControlClient ccc;
@@ -30,7 +34,7 @@ public class CoapDataFeedHandler {
         this.dataFeedLabel = dataFeedLabel;
     }
 
-    public void updateDataFeed(DataFeed dataFeed) {
-//        ccc.put todo
+    public void updateDataFeed(DataFeed dataFeed) throws ConnectorException, IOException {
+        ccc.put(dataFeedEndpoint, JSONSerializer.serializeDataFeed(dataFeed));
     }
 }

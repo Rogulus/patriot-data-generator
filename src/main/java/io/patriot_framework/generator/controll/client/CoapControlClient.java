@@ -80,8 +80,10 @@ public class CoapControlClient {
         return client.post(payload, MediaTypeRegistry.TEXT_PLAIN);
     }
 
-//    put Coap todo
-
+    public CoapResponse put(String resource, String payload) throws ConnectorException, IOException {
+        client.setURI(getUri() + resource);
+        return client.put(payload, MediaTypeRegistry.TEXT_PLAIN);
+    }
 
     /**
      * Gets all resources/endpoints for specified label of an Device.
