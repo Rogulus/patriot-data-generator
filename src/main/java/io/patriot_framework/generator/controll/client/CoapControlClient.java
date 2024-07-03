@@ -46,6 +46,7 @@ public class CoapControlClient {
      */
     private CoapClient client = new CoapClient();
 
+
     public CoapControlClient(String uri) {
         this.uri = uri;
         client.setURI(uri);
@@ -82,6 +83,7 @@ public class CoapControlClient {
 
     public CoapResponse put(String resource, String payload) throws ConnectorException, IOException {
         client.setURI(getUri() + resource);
+
         return client.put(payload, MediaTypeRegistry.TEXT_PLAIN);
     }
 
@@ -115,6 +117,19 @@ public class CoapControlClient {
 
         return new CoapDeviceHandler(this, deviceEndpoints, label);
     }
+
+    public CoapSensorHandler getSensor(String label) throws ConnectorException, IOException {
+        Pattern pattern = Pattern.compile(String.format("/sensor/%s(/|$)", label));
+
+        Set<String> deviceEndpoints = client.discover()
+                .stream()
+                .map(WebLink::getURI)
+                .filter(pattern.asPredicate())
+                .collect(Collectors.toSet());
+
+        return new CoapSensorHandler(this, deviceEndpoints, label);
+    } // todo obecne reseni?
+
 
     public String getUri() {
         return uri;

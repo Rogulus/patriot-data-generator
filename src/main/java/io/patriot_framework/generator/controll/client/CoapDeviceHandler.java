@@ -43,12 +43,12 @@ public class CoapDeviceHandler {
     /**
      * Set of visible sensor endpoints
      */
-    private Set<String> deviceEndpoints;
+    protected Set<String> deviceEndpoints;
 
     /**
      * Coap Control Client
      */
-    private CoapControlClient ccc;
+    protected CoapControlClient ccc;
 
     public CoapDeviceHandler(CoapControlClient ccc, Set<String> deviceEndpoints, String deviceLabel) {
         this.deviceEndpoints = deviceEndpoints;

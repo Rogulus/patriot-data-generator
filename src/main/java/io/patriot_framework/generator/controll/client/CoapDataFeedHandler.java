@@ -30,7 +30,7 @@ public class CoapDataFeedHandler {
 
     public CoapDataFeedHandler(CoapControlClient ccc, String dataFeedEndpoint, String dataFeedLabel) {
         this.ccc = ccc;
-        this.dataFeedEndpoint = dataFeedEndpoint;
+        this.dataFeedEndpoint = dataFeedEndpoint + "?label=" + dataFeedLabel;
         this.dataFeedLabel = dataFeedLabel;
     }
 
