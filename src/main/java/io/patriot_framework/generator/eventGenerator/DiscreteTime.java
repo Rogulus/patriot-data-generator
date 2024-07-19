@@ -20,21 +20,22 @@ import java.util.Objects;
 
 public class DiscreteTime implements Time, Cloneable {
 
+
     public DiscreteTime() {
     }
 
+    //in seconds
     public DiscreteTime(Integer value) {
         time = value;
     }
 
-    @Override
-    public Integer getValue() {
-        return time;
+    public DiscreteTime(Time time) {
+        this.time = (int)time.getMillis()/1000;
     }
 
     @Override
-    public void setValue(int value) {
-        this.time = value;
+    public void setValue(long millis) {
+        this.time = (int)millis/1000;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class DiscreteTime implements Time, Cloneable {
     @Override
     public int compareTo(Time other) {
         DiscreteTime otherTime = new DiscreteTime();
-        otherTime.setValue(other.getValue());
+        otherTime.setValue(other.getMillis());
         return compare(this, otherTime);
     }
 
@@ -74,8 +75,20 @@ public class DiscreteTime implements Time, Cloneable {
 
     public int time;
 
-
     public Time plus(Time other) {
-        return new DiscreteTime(time + other.getValue());
+        return new DiscreteTime((int)(time + other.getMillis()/1000));
+    }
+
+    public Time minus(Time other) {
+        return new DiscreteTime((int)(time - other.getMillis()/1000)); //todo co se zapornym casem?
+    }
+
+    public long getMillis() {
+        return time * 1000L;
+    }
+
+    @Override
+    public String toString() {
+        return "Discrete time: " + time;
     }
 }

@@ -35,7 +35,12 @@ public class EventBusImpl implements EventBus, Runnable{
     private Set<Simulation> simulations = new HashSet<>();
     private TreeMap<Time, TimeActions> actionsQueue = new TreeMap<>();
     private Hashtable<String, Set<Simulation>> topicSubscribers = new Hashtable<>();  // topic to subscribers
+    private final Object pauseLock = new Object();
+    private final Object safeShutdownLock = new Object();
+    private boolean paused = false;
     private Time currentTime = new DiscreteTime();
+    private boolean running = false;
+    private boolean safeToShutdown = false;
 
 
     public EventBusImpl() {
@@ -70,7 +75,7 @@ public class EventBusImpl implements EventBus, Runnable{
     }
 
     public void registerRecurringAwake(Simulation simulation, Time interval, Time startTime) {
-        if(startTime.getValue() <= currentTime.getValue()) return;
+        if(startTime.getMillis() <= currentTime.getMillis()) return;
         TimeActions actions = actionsQueue.computeIfAbsent(startTime, k -> new TimeActions());
         actions.recurringAwakeApplicants.add(new ImmutablePair<>(interval, simulation));
     }
@@ -125,24 +130,90 @@ public class EventBusImpl implements EventBus, Runnable{
         }
     }
 
+
+    public void pause() {
+        synchronized (pauseLock) {
+            paused = true;
+        }
+    }
+
+    public void unPause() {
+        synchronized (pauseLock) {
+            paused = false;
+        }
+    }
+
+    public boolean readyToShutdown() {
+        synchronized (pauseLock) {
+            return safeToShutdown;
+        }
+    }
+
+
+    private void tryPause() {
+        System.out.println("try pause");
+        synchronized (pauseLock) {
+            while (paused) {
+                System.out.println("je to paused");
+                    safeToShutdown = true;
+                    paused = false;
+                    Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+
     /**
      *
      */
     @Override
     public void run() {
         Map.Entry<Time, TimeActions> entry = actionsQueue.pollFirstEntry();
+        running = true;
         while(entry != null) {
             currentTime = entry.getKey();
-            awakeRecurringSimulations(entry.getValue().recurringAwakeApplicants);
-            awakeSimulations(entry.getValue().awakeApplicants);
-            deliverEvents(entry.getValue().events);
+            processTimeStep(entry.getValue());
             entry = actionsQueue.pollFirstEntry();
-            try{
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.out.println(e);
-            }
         }
+        running = false;
+    }
+
+    @Override
+    public boolean run(Time until) { //todo navrat neceho smysluplneho
+        synchronized (pauseLock) {
+            safeToShutdown = false;
+        }
+        Map.Entry<Time, TimeActions> entry = actionsQueue.firstEntry();
+        running = true;
+        while(entry != null && entry.getKey().getMillis() <= until.getMillis()) { //todo exsituje funkce compare? pozor tady je nebo rovno
+            System.out.println("WHILE");
+            System.out.println(Thread.currentThread().getId());
+            currentTime = entry.getKey();
+            processTimeStep(entry.getValue());
+            actionsQueue.pollFirstEntry();
+            entry = actionsQueue.firstEntry();
+            tryPause();
+        }
+        running = false;
+        synchronized (pauseLock) {
+            safeToShutdown = true;
+        }
+        return entry != null;
+    }
+
+    public Time getNextStepTime() {
+        return actionsQueue.firstEntry().getKey();
+    }
+
+    public boolean running() {
+        return running;
+    }
+
+
+    private void processTimeStep(TimeActions timeActions) {
+        awakeRecurringSimulations(timeActions.recurringAwakeApplicants);
+        awakeSimulations(timeActions.awakeApplicants);
+        deliverEvents(timeActions.events);
     }
 
 

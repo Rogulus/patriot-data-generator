@@ -54,7 +54,7 @@ public class ChildWithMatches extends SimulationBase {
             System.out.println("Dite zapaluje: " + coordinate.getName());
         } else {
             time = eventBus.getTime();
-            time.setValue(time.getValue() + 5);
+            time.setValue(time.getMillis() + 5000L);
             registerAwake(time);
         }
     }

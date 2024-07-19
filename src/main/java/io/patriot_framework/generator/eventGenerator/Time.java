@@ -18,19 +18,20 @@ package io.patriot_framework.generator.eventGenerator;
 
 public interface Time extends Comparable<Time>{
 
-    void setValue(int time);// todo fix binding to one type
-    Integer getValue();
+    void setValue(long millis);// todo fix binding to one type
 
     public boolean equals(Object o);
 
     int hashCode();
 
     static int compare(Time o, Time o2) {
-        return Integer.compare(o.getValue(), o2.getValue());
+        return Long.compare(o.getMillis(), o2.getMillis());
     }
 
     public int compareTo(Time other);
     Object clone();
 
     public Time plus(Time other);
+    public Time minus(Time other);
+    public long getMillis();
 }

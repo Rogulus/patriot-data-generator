@@ -17,30 +17,23 @@
 package io.patriot_framework.generator.eventGenerator;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.device.impl.basicSensors.Default;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
 import io.patriot_framework.generator.eventGenerator.graphFire.ChildWithMatches;
 import io.patriot_framework.generator.eventGenerator.graphFire.Fire;
-import io.patriot_framework.generator.eventGenerator.graphFire.Room;
 import io.patriot_framework.generator.eventGenerator.graphFire.RoomTempDataFeed;
 import io.patriot_framework.generator.eventGenerator.graphFire.TemperatureDiffuser;
-import org.apache.lucene.analysis.da.DanishAnalyzer;
-import org.jgrapht.Graph;
 import org.junit.jupiter.api.Test;
-import org.jgrapht.graph.*;
 
-import javax.sound.midi.Soundbank;
-import java.util.HashMap;
-import java.util.List;
+import java.io.IOException;
 
 // todo snad by to slo udelat templatovane na typ coordinatu
 // nebo udelat vuci interface nejakeho coordinatu
 
 public class GraphFireTest {
     @Test
-    public void test() {
+    public void test() throws InterruptedException, IOException {
 
         UndirectedGraphSpace houseSpace = new UndirectedGraphSpace.UndirectedGraphSpaceBuilder()
                 .addEdge("garage", "entrance")
@@ -79,28 +72,35 @@ public class GraphFireTest {
         conductor.addSimulation(corridorDF);
         // todo zobecnit fire na cellular automat s nastavitelnou sirkou okoli?
 
-        Thread conductorThread = new Thread(conductor);
-        conductorThread.start();
+        System.out.println("THREADID:");
+        System.out.println(Thread.currentThread().getId());
+        conductor.runUntil(new DiscreteTime(5));
+        conductor.runRealTimeFor(new DiscreteTime(5));
+        Thread.sleep(3000);
+        conductor.pause();
+        System.out.println("hsdjsd");
 
-        for(int i = 0; i < 120; i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.out.println(e);
-            }
-            System.out.println("Time: " + i);
-            System.out.println();
 
-            houseSpace.getAll().forEach(x -> System.out.println(x));
 
-            List<Data> temp = livingRoomThermometer.requestData();
-            System.out.println(temp.get(0));
+        System.out.println("11111");
+        conductor.runUntil(new DiscreteTime(20));
+        System.out.println("Sd");
+        conductor.runRealTimeFor(new DiscreteTime(5));
+        System.out.println("dsd");
+        Thread.sleep(5010);
+        conductor.runRealTime();
+        Thread.sleep(5000);
+        conductor.pause();
 
-            List<Data> temp1 = corridorThermometer.requestData();
-            System.out.println(temp1.get(0));
 
-            List<Data> temp2 = garageThermometer.requestData();
-            System.out.println(temp2.get(0));
-        }
+        // todo
+        // po spustenem runu by nemelo jit znova spustit run
+        // nice to have cli wrapper
+        //todo doresit jestli running promena j k necemu
+        // otazka jestli prommene pause davaji smysl v event bus ne aot byt stop?
+
+        System.out.println("hello");
+        Thread.sleep(50000);
+        System.out.println("end");
     }
 }
