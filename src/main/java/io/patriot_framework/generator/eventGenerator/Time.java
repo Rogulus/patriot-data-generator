@@ -16,8 +16,6 @@
 
 package io.patriot_framework.generator.eventGenerator;
 
-import java.util.Objects;
-
 public interface Time extends Comparable<Time>{
 
     void setValue(int time);// todo fix binding to one type
@@ -34,4 +32,5 @@ public interface Time extends Comparable<Time>{
     public int compareTo(Time other);
     Object clone();
 
+    public Time plus(Time other);
 }

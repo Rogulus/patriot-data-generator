@@ -39,5 +39,4 @@ public class LinearActuator extends AbstractActuator {
                         .build()
         );
     }
-
 }

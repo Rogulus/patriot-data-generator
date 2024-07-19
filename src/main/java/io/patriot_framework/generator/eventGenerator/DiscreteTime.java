@@ -75,4 +75,7 @@ public class DiscreteTime implements Time, Cloneable {
     public int time;
 
 
+    public Time plus(Time other) {
+        return new DiscreteTime(time + other.getValue());
+    }
 }

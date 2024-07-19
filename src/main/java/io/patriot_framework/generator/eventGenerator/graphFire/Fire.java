@@ -18,15 +18,12 @@ package io.patriot_framework.generator.eventGenerator.graphFire;
 
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.coordinates.Coordinate;
 import io.patriot_framework.generator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.dataFeed.NormalDistVariateDataFeed;
 import io.patriot_framework.generator.eventGenerator.DiscreteTime;
 import io.patriot_framework.generator.eventGenerator.SimulationBase;
 import io.patriot_framework.generator.eventGenerator.Time;
-
-import java.util.HashSet;
 
 public class Fire extends SimulationBase {
     private Time time = new DiscreteTime();
@@ -47,15 +44,12 @@ public class Fire extends SimulationBase {
     }
 
     public void init() {
-        registerAwake(new DiscreteTime(1));
+        registerRecurringAwake(new DiscreteTime(1));
         subscribe("ignite-fire");
     }
 
     @Override
     public void awake() {
-        time = eventBus.getTime();
-        time.setValue(time.getValue() + 1);
-        registerAwake(time);
 
         space.getAll().forEach((coordinate) -> {
                     Data isOnFire = coordinate.getData("is-on-fire");

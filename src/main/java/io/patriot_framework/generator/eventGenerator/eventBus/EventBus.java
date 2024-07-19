@@ -26,7 +26,11 @@ public interface EventBus {
     void unregister(Simulation simulation);
 
     void registerAwake(Simulation simulation , Time time);
+    void registerRecurringAwake(Simulation simulation, Time interval);
+    void registerRecurringAwake(Simulation simulation, Time interval, Time startTime);
 
+    // Deletes all recurring awakes
+    void unregisterRecurringAwake(Simulation simulation);
     void publish(Data message, String topic);
     void publishOnTime(Data message, String topic, Time time);
     void subscribe(Simulation simulation, String topic);

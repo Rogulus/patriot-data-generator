@@ -19,9 +19,15 @@ package io.patriot_framework.generator.device.passive.actuators.stateMachine;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -58,10 +64,16 @@ public final class StateMachine {
     @JsonProperty
     private Transition th;
 
+    @JsonProperty
+    private ArrayDeque<String> stateHistory = new ArrayDeque<>() {
+    };
+
     @JsonCreator
     public StateMachine(@JsonProperty("states") List<State> states) {
-        th = new ActiveTransition(states.get(0));
+        State startState = states.get(0);
+        th = new ActiveTransition(startState);
         this.states = states;
+        stateHistory.add(startState.getName());
     }
 
     /**
@@ -70,7 +82,29 @@ public final class StateMachine {
      * @param event input event for StateMachine
      */
     public void transition(String event) {
+        String previousState;
+        try {
+            previousState = getCurrent();
+            if(previousState != null) {
+                addToStateHistory(previousState);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e); //todo log
+        }
+
         th.transition(event);
+        try {
+            previousState = getCurrent();
+            if(previousState != null) {
+                addToStateHistory(previousState);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e); //todo log
+        }
     }
 
     /**
@@ -78,13 +112,19 @@ public final class StateMachine {
      *
      * @return the name of current State
      * @throws ExecutionException if the transition threw an exception
-     * @throws InterruptedException if the current tread was interrupted while waiting for transition
+     * @throws InterruptedException if the current thread was interrupted while waiting for transition
      */
     @JsonIgnore
     public String getCurrent() throws ExecutionException, InterruptedException {
         Future<State> current = th.getFutureState();
 
-        return current.isDone() ? current.get().getName() : null;
+        if(! current.isDone()) {
+            return  null;
+        }
+
+        String currentState = current.get().getName();
+        addToStateHistory(currentState);
+        return currentState;
     }
 
     public void setDataForState(String state, int data) {
@@ -93,6 +133,32 @@ public final class StateMachine {
                 .findFirst()
                 .get()
                 .setData(data);
+    }
+
+    /**
+     * Idempotent adding
+     * @param state state
+     */
+    private void addToStateHistory(String state) {
+        String lastState = stateHistory.peekLast();
+        if(lastState == null || !lastState.equals(state)){
+            stateHistory.add(state);
+        }
+    }
+
+    public Deque<String> getStateHistory() {
+        try {
+            getCurrent();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e); // todo log
+        }
+        return stateHistory.clone();
+    }
+
+    public void clearStateHistory() {
+        stateHistory.clear();
     }
 
     @Override
@@ -130,7 +196,7 @@ public final class StateMachine {
         }
 
         public Builder to(String name) {
-            addTransition(currentState, RandomStringUtils.random(7, true, true), name);
+            addTransition(currentState, name, name);
             return this;
         }
 

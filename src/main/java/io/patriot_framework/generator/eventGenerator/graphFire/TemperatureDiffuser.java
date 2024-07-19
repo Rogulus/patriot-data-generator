@@ -39,14 +39,11 @@ public class TemperatureDiffuser extends SimulationBase {
     }
 
     public void init() {
-        registerAwake(new DiscreteTime(0));
+        registerRecurringAwake(new DiscreteTime(1));
     }
 
     @Override
     public void awake() {
-        time = eventBus.getTime();
-        time.setValue(time.getValue() + 1);
-        registerAwake(time);
 
         space.getAll().forEach((coordinate) -> {
             HashSet<UndirectedGraphCoordinate> neighbors = coordinate.getNeighbors();

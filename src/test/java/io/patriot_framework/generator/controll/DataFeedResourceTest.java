@@ -19,7 +19,6 @@ package io.patriot_framework.generator.controll;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.patriot_framework.generator.dataFeed.ConstantDataFeed;
 import io.patriot_framework.generator.dataFeed.DataFeed;
-import io.patriot_framework.generator.dataFeed.NormalDistVariateDataFeed;
 import io.patriot_framework.generator.device.impl.basicSensors.Thermometer;
 import io.patriot_framework.generator.utils.JSONSerializer;
 import org.eclipse.californium.core.CoapClient;
@@ -46,7 +45,6 @@ public class DataFeedResourceTest {
     String t1uri = coapUrl + t1Resource;
 
     Thermometer t1;
-    Thermometer t2;
 
     CoapClient client;
 
@@ -78,11 +76,6 @@ public class DataFeedResourceTest {
         df.setLabel("df1");
         t1 = new Thermometer("t1", df);
         t1.registerToCoapServer();
-
-        df = new NormalDistVariateDataFeed(35,1);
-        df.setLabel("df2");
-        t2 = new Thermometer("t2", df);
-        t2.registerToCoapServer();
 
         client = new CoapClient(coapUrl + rootResource);
     }

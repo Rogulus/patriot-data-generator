@@ -19,7 +19,7 @@ package io.patriot_framework.generator.eventGenerator;
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
 
-public abstract class SimulationBase implements Simulation{
+public abstract class SimulationBase implements Simulation {
     protected EventBus eventBus;
 
     @Override
@@ -34,6 +34,10 @@ public abstract class SimulationBase implements Simulation{
 
     protected void registerAwake(Time time) {
         eventBus.registerAwake(this, time);
+    }
+
+    protected void registerRecurringAwake(Time interval) {
+        eventBus.registerRecurringAwake(this, interval);
     }
 
     protected void publish(Data message, String topic) {

@@ -31,16 +31,12 @@ public class RoomTempSim extends SimulationBase {
     public void init() { // todo pridat do interface spojeneho s conductorem
         subscribe( "temperature");
         subscribe("tempDiff");
-        time.setValue(3);
-        registerAwake(time);
+        registerRecurringAwake(new DiscreteTime(3));
         publishOnTime(new Data(Integer.class, temperature), "temperature", time);
     }
 
     @Override
     public void awake() {
-        time = eventBus.getTime();
-        time.setValue(time.getValue() + 3);
-        registerAwake(time);
         publish(new Data(Integer.class, temperature), "temperature");
     }
 

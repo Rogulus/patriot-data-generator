@@ -20,7 +20,7 @@ import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventGenerator.DiscreteTime;
 import io.patriot_framework.generator.eventGenerator.Simulation;
 import io.patriot_framework.generator.eventGenerator.Time;
-import io.patriot_framework.generator.eventGenerator.eventBus.EventBus;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
 
 
 public class EventBusImpl implements EventBus, Runnable{
@@ -63,6 +64,26 @@ public class EventBusImpl implements EventBus, Runnable{
     }
 
     @Override
+    public void registerRecurringAwake(Simulation simulation, Time interval) {
+        TimeActions actions = actionsQueue.computeIfAbsent(currentTime.plus(interval), k -> new TimeActions());
+        actions.recurringAwakeApplicants.add(new ImmutablePair<>(interval, simulation));
+    }
+
+    public void registerRecurringAwake(Simulation simulation, Time interval, Time startTime) {
+        if(startTime.getValue() <= currentTime.getValue()) return;
+        TimeActions actions = actionsQueue.computeIfAbsent(startTime, k -> new TimeActions());
+        actions.recurringAwakeApplicants.add(new ImmutablePair<>(interval, simulation));
+    }
+
+    public void unregisterRecurringAwake(Simulation simulation) {
+        for(var timeActions: actionsQueue.entrySet()) {
+            timeActions.getValue().recurringAwakeApplicants.removeIf(
+                    recurringAwakeApplicant -> recurringAwakeApplicant.getRight().equals(simulation)
+            );
+        }
+    }
+
+    @Override
     public void subscribe(Simulation simulation, String topic) {
         Set<Simulation> topicSubscribers = this.topicSubscribers.computeIfAbsent(topic, k -> new LinkedHashSet<>());  // todo equeals se nesmi menit po vlozeni
         topicSubscribers.add(simulation);
@@ -86,6 +107,13 @@ public class EventBusImpl implements EventBus, Runnable{
         }
     }
 
+    private void awakeRecurringSimulations(Set<ImmutablePair<Time, Simulation>> simulations) {
+        for (var recurringAwake: simulations) {
+            recurringAwake.getRight().awake();
+            registerRecurringAwake(recurringAwake.getRight(), recurringAwake.getLeft());
+        }
+    }
+
 
     private void deliverEvents(Set<Event> events) {
         for(Event event: events) {
@@ -97,11 +125,15 @@ public class EventBusImpl implements EventBus, Runnable{
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         Map.Entry<Time, TimeActions> entry = actionsQueue.pollFirstEntry();
         while(entry != null) {
             currentTime = entry.getKey();
+            awakeRecurringSimulations(entry.getValue().recurringAwakeApplicants);
             awakeSimulations(entry.getValue().awakeApplicants);
             deliverEvents(entry.getValue().events);
             entry = actionsQueue.pollFirstEntry();
@@ -115,6 +147,7 @@ public class EventBusImpl implements EventBus, Runnable{
 
 
     private class TimeActions {
+        public Set<ImmutablePair<Time, Simulation>> recurringAwakeApplicants = new LinkedHashSet<>();
         public Set<Simulation> awakeApplicants = new LinkedHashSet<>();
         public Set<Event> events = new LinkedHashSet<>();
     }

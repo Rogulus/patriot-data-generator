@@ -52,6 +52,11 @@ public class CoapControlClient {
         client.setURI(uri);
     }
 
+    public CoapControlClient(String ip, int port) {
+        this.uri = ip + ":" + port;
+        client.setURI(uri);
+    }
+
     /**
      * Get request using {@link CoapClient#get()}. This method provides
      * additional URI management.
@@ -129,6 +134,18 @@ public class CoapControlClient {
 
         return new CoapSensorHandler(this, deviceEndpoints, label);
     } // todo obecne reseni?
+
+    public CoapActuatorHandler getActuator(String label) throws ConnectorException, IOException {
+        Pattern pattern = Pattern.compile(String.format("/actuator/%s(/|$)", label));
+
+        Set<String> deviceEndpoints = client.discover()
+                .stream()
+                .map(WebLink::getURI)
+                .filter(pattern.asPredicate())
+                .collect(Collectors.toSet());
+
+        return new CoapActuatorHandler(this, deviceEndpoints, label);
+    }
 
 
     public String getUri() {
