@@ -29,6 +29,7 @@ public class Conductor implements Runnable{
     private EventBus eventBus;
     private Set<SimulationBase> simulations = new HashSet<>();
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final Object shutdownLock = new Object();
 
     public Conductor() { // todo pridat moznost dat jinou implementaci
         this.eventBus = new EventBusImpl();
@@ -75,14 +76,16 @@ public class Conductor implements Runnable{
     public void runRealTime() {
         startRealTime = System.currentTimeMillis();
         long startSimulationTime = eventBus.getTime().getMillis();
-
+        scheduler = Executors.newScheduledThreadPool(1);
         Runnable task = new Runnable() {
 
             public void run() {
-                eventBus.run(eventBus.getNextStepTime());
+                synchronized (shutdownLock) {
+                    eventBus.run(eventBus.getNextStepTime());
+                }
 
-                Time nextStepSimulationTime = eventBus.getNextStepTime(); // todo toto pocita ze se vraci vteriny, ale o todo kontorla jestli se cas posunul
-                long nextStepRealTime = startRealTime + nextStepSimulationTime.getMillis() - startSimulationTime; // predpoklad ze simulace zacina od 0 - uz reseno ale funguje to
+                Time nextStepSimulationTime = eventBus.getNextStepTime();
+                long nextStepRealTime = startRealTime + nextStepSimulationTime.getMillis() - startSimulationTime;
                 long delay = nextStepRealTime - System.currentTimeMillis();
 
                 if(delay < 0) {
@@ -98,19 +101,27 @@ public class Conductor implements Runnable{
 
     public void pause() {
         System.out.println("ZAVOLAL SE STOP");
-        eventBus.pause();
-        while(! eventBus.readyToShutdown()) {
+        synchronized (shutdownLock) {
+//            eventBus.pause();
+//            while (!eventBus.readyToShutdown()) {
+//                try {
+//                    Thread.sleep(1);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//            System.out.println("CONDUCTOR VOLA SHUTDOWN");
+
+            System.out.println("in stop");
+            scheduler.shutdownNow();
             try {
-                Thread.sleep(1);
+                if(! scheduler.awaitTermination(1,  TimeUnit.SECONDS)) {
+                    System.out.println("Log ze se nepodarilo sejmout thread");
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("CONDUCTOR VOLA SHUTDOWN");
 
-        scheduler.shutdown();
-        scheduler.shutdownNow();
-        scheduler = Executors.newScheduledThreadPool(1);
-        eventBus.unPause();
     }
 }

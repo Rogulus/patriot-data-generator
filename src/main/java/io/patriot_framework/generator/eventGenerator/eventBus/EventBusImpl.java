@@ -41,6 +41,7 @@ public class EventBusImpl implements EventBus, Runnable{
     private Time currentTime = new DiscreteTime();
     private boolean running = false;
     private boolean safeToShutdown = false;
+    private boolean pausing = false;
 
 
     public EventBusImpl() {
@@ -133,7 +134,9 @@ public class EventBusImpl implements EventBus, Runnable{
 
     public void pause() {
         synchronized (pauseLock) {
-            paused = true;
+            if(!readyToShutdown()) {
+                paused = true;
+            }
         }
     }
 
