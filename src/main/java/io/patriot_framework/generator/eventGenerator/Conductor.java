@@ -30,6 +30,7 @@ public class Conductor implements Runnable{
     private Set<SimulationBase> simulations = new HashSet<>();
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final Object shutdownLock = new Object();
+    private boolean running;
 
     public Conductor() { // todo pridat moznost dat jinou implementaci
         this.eventBus = new EventBusImpl();
@@ -44,16 +45,20 @@ public class Conductor implements Runnable{
     long startRealTime;
 
     public void run() {
+        running = true;
         eventBus.run();
+        running = false;
     }
 
     public void runFor(Time duration) {
         Time busTime = eventBus.getTime();
-        eventBus.run(busTime.plus(duration));
+        eventBus.runUntil(busTime.plus(duration));
     }
 
     public void runUntil(Time endTime) {
-        eventBus.run(endTime);
+        running = true;
+        eventBus.runUntil(endTime);
+        running = false;
     }
 
     public void runRealTimeFor(Time duration) {
@@ -72,21 +77,24 @@ public class Conductor implements Runnable{
     }
 
 
-
     public void runRealTime() {
         startRealTime = System.currentTimeMillis();
         long startSimulationTime = eventBus.getTime().getMillis();
         scheduler = Executors.newScheduledThreadPool(1);
+        running = true;
         Runnable task = new Runnable() {
 
             public void run() {
                 synchronized (shutdownLock) {
-                    eventBus.run(eventBus.getNextStepTime());
+                    if( ! eventBus.tick()) {
+                        pause();
+                        return;
+                    }
                 }
 
                 Time nextStepSimulationTime = eventBus.getNextStepTime();
                 long nextStepRealTime = startRealTime + nextStepSimulationTime.getMillis() - startSimulationTime;
-                long delay = nextStepRealTime - System.currentTimeMillis();
+                long delay = nextStepRealTime - System.currentTimeMillis();  // real time interval (in milliseconds) between now and the time when next step should be executed
 
                 if(delay < 0) {
                     delay = 0;
@@ -102,17 +110,8 @@ public class Conductor implements Runnable{
     public void pause() {
         System.out.println("ZAVOLAL SE STOP");
         synchronized (shutdownLock) {
-//            eventBus.pause();
-//            while (!eventBus.readyToShutdown()) {
-//                try {
-//                    Thread.sleep(1);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            System.out.println("CONDUCTOR VOLA SHUTDOWN");
-
             System.out.println("in stop");
+            running = false;
             scheduler.shutdownNow();
             try {
                 if(! scheduler.awaitTermination(1,  TimeUnit.SECONDS)) {
@@ -122,6 +121,9 @@ public class Conductor implements Runnable{
                 throw new RuntimeException(e);
             }
         }
+    }
 
+    public boolean isRunning() {
+        return running;
     }
 }

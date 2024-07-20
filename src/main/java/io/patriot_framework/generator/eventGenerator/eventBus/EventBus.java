@@ -34,18 +34,16 @@ public interface EventBus {
     void publish(Data message, String topic);
     void publishOnTime(Data message, String topic, Time time);
     void subscribe(Simulation simulation, String topic);
+    boolean tick();
     void run();
-    void pause();
-    public void unPause();
-    public boolean readyToShutdown();
+
 
     /**
      *
      * @param until
      * @return true if the simulation can continue
      */
-    public boolean run(Time until);
+    public boolean runUntil(Time until);
 
     public Time getNextStepTime();
-    public boolean running();
 }

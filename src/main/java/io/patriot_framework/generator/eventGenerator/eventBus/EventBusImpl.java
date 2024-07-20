@@ -35,14 +35,7 @@ public class EventBusImpl implements EventBus, Runnable{
     private Set<Simulation> simulations = new HashSet<>();
     private TreeMap<Time, TimeActions> actionsQueue = new TreeMap<>();
     private Hashtable<String, Set<Simulation>> topicSubscribers = new Hashtable<>();  // topic to subscribers
-    private final Object pauseLock = new Object();
-    private final Object safeShutdownLock = new Object();
-    private boolean paused = false;
     private Time currentTime = new DiscreteTime();
-    private boolean running = false;
-    private boolean safeToShutdown = false;
-    private boolean pausing = false;
-
 
     public EventBusImpl() {
         currentTime.setValue(0);
@@ -132,84 +125,51 @@ public class EventBusImpl implements EventBus, Runnable{
     }
 
 
-    public void pause() {
-        synchronized (pauseLock) {
-            if(!readyToShutdown()) {
-                paused = true;
-            }
-        }
-    }
-
-    public void unPause() {
-        synchronized (pauseLock) {
-            paused = false;
-        }
-    }
-
-    public boolean readyToShutdown() {
-        synchronized (pauseLock) {
-            return safeToShutdown;
-        }
-    }
-
-
-    private void tryPause() {
-        System.out.println("try pause");
-        synchronized (pauseLock) {
-            while (paused) {
-                System.out.println("je to paused");
-                    safeToShutdown = true;
-                    paused = false;
-                    Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-
     /**
      *
      */
     @Override
     public void run() {
-        Map.Entry<Time, TimeActions> entry = actionsQueue.pollFirstEntry();
-        running = true;
-        while(entry != null) {
-            currentTime = entry.getKey();
-            processTimeStep(entry.getValue());
-            entry = actionsQueue.pollFirstEntry();
+        boolean canContinue = true;
+        while(canContinue) {
+            canContinue = tick();
         }
-        running = false;
     }
 
-    @Override
-    public boolean run(Time until) { //todo navrat neceho smysluplneho
-        synchronized (pauseLock) {
-            safeToShutdown = false;
-        }
+
+    public boolean runUntil(Time until) {
         Map.Entry<Time, TimeActions> entry = actionsQueue.firstEntry();
-        running = true;
-        while(entry != null && entry.getKey().getMillis() <= until.getMillis()) { //todo exsituje funkce compare? pozor tady je nebo rovno
-            System.out.println("WHILE");
-            System.out.println(Thread.currentThread().getId());
-            currentTime = entry.getKey();
-            processTimeStep(entry.getValue());
-            actionsQueue.pollFirstEntry();
+        if(entry == null) {
+            return false;
+        }
+
+        while(entry.getKey().getMillis() <= until.getMillis()) { // warning or equals matter!
+            if(! tick()) {
+                return false;
+            }
             entry = actionsQueue.firstEntry();
-            tryPause();
         }
-        running = false;
-        synchronized (pauseLock) {
-            safeToShutdown = true;
-        }
-        return entry != null;
+        return true;
     }
+
+
+    public boolean tick() {
+        Map.Entry<Time, TimeActions> entry = actionsQueue.firstEntry();
+        if(entry == null) {
+            return false;
+        }
+        currentTime = entry.getKey();
+        processTimeStep(entry.getValue());
+        actionsQueue.pollFirstEntry();
+        return !actionsQueue.isEmpty();
+    }
+
 
     public Time getNextStepTime() {
+        if(actionsQueue.isEmpty()) {
+            return null;
+        }
         return actionsQueue.firstEntry().getKey();
-    }
-
-    public boolean running() {
-        return running;
     }
 
 
@@ -225,6 +185,7 @@ public class EventBusImpl implements EventBus, Runnable{
         public Set<Simulation> awakeApplicants = new LinkedHashSet<>();
         public Set<Event> events = new LinkedHashSet<>();
     }
+
 
     public class Event {
         public Data message;
