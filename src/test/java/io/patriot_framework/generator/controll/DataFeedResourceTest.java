@@ -19,6 +19,7 @@ package io.patriot_framework.generator.controll;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.patriot_framework.generator.dataFeed.ConstantDataFeed;
 import io.patriot_framework.generator.dataFeed.DataFeed;
+import io.patriot_framework.generator.device.impl.basicSensors.DHT11;
 import io.patriot_framework.generator.device.impl.basicSensors.Thermometer;
 import io.patriot_framework.generator.utils.JSONSerializer;
 import org.eclipse.californium.core.CoapClient;
@@ -56,7 +57,11 @@ public class DataFeedResourceTest {
     }
 
     private String buildRequestUri(String path, String label) {
-        return coapUrl + path + "?label=" + label;
+        return coapUrl + path + "/" + label;
+    }
+
+    private String buildRequestUri(String path) {
+        return coapUrl + path;
     }
 
     private CoapResponse sendPutRequest(CoapClient client, String payload) throws ConnectorException, IOException {
@@ -66,8 +71,6 @@ public class DataFeedResourceTest {
     private CoapResponse sendPostRequest(CoapClient client, String payload) throws ConnectorException, IOException {
         return client.post(payload, MediaTypeRegistry.APPLICATION_JSON);
     }
-
-
 
 
     @BeforeEach
@@ -88,24 +91,6 @@ public class DataFeedResourceTest {
 
 
     @Test
-    public void getDataFeed() throws ConnectorException, IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String label = "df1";
-        String unknownLabel = "unknownLabel";
-        String uri = buildRequestUri( t1Resource +"/dataFeed", unknownLabel);
-        client.setURI(uri);
-        CoapResponse response = client.get();
-        assertEquals(CoAP.ResponseCode.NOT_FOUND, response.getCode());
-        assertEquals("Data feed with given label not found", response.getResponseText());
-
-        uri = buildRequestUri(t1Resource + "/dataFeed", label);
-        client.setURI(uri);
-        response = client.get();
-        assertEquals(CoAP.ResponseCode.CONTENT, response.getCode());
-        assertEquals(objectMapper.writeValueAsString(t1.getDataFeed()), response.getResponseText());
-    }
-
-    @Test
     public void getAllDataFeeds() throws ConnectorException, IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         client.setURI(t1uri + "/dataFeed");
@@ -114,21 +99,43 @@ public class DataFeedResourceTest {
         assertEquals(objectMapper.writeValueAsString(t1.getDataFeeds()), response.getResponseText());
     }
 
+
+    @Test
+    public void getDataFeed() throws ConnectorException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String label = "df1";
+        String unknownLabel = "unknownLabel";
+        String uri = buildRequestUri( t1Resource +"/dataFeed", unknownLabel);
+        client.setURI(uri);
+        CoapResponse response = client.get();
+        assertEquals(CoAP.ResponseCode.NOT_FOUND, response.getCode());
+        System.out.println( response.getResponseText());
+        uri = buildRequestUri(t1Resource + "/dataFeed", label);
+        client.setURI(uri);
+        response = client.get();
+        assertEquals(CoAP.ResponseCode.CONTENT, response.getCode());
+        assertEquals(objectMapper.writeValueAsString(t1.getDataFeed()), response.getResponseText());
+    }
+
+
+
     @Test
     public void postSimpleDataFeed() throws ConnectorException, IOException {
-        double newTemperature = 42.0;
-        String dataFeedLabel = t1.getDataFeed().getLabel();
         String anotherLabel = "anotherLabel";
 
-        String requestUri = buildRequestUri("/sensor/t1/dataFeed", dataFeedLabel);
-        client.setURI(requestUri);
-        CoapResponse response = client.delete();
-        assertEquals(CoAP.ResponseCode.DELETED, response.getCode());
+        DataFeed df1 = new ConstantDataFeed(25);
+        df1.setLabel("df1");
+        DataFeed df2 = new ConstantDataFeed(25);
+        df2.setLabel("df2");
+        DataFeed df3 = new ConstantDataFeed(25);
+        df3.setLabel("df3");
+        var dht = new DHT11("dht", df1, df2);
+        dht.registerToCoapServer();
 
-        DataFeed newDataFeed = createConstantDataFeed(newTemperature, dataFeedLabel);
-        String requestBody =  JSONSerializer.serializeDataFeed(newDataFeed);
-        client.setURI(coapUrl + "/sensor/t1/dataFeed");
+        CoapResponse response;
 
+        String requestBody =  JSONSerializer.serializeDataFeed(df3);
+        client.setURI(coapUrl + "/sensor/dht/dataFeed");
         response = sendPostRequest(client, requestBody);
         assertEquals(CoAP.ResponseCode.CREATED, response.getCode());
 
@@ -136,8 +143,9 @@ public class DataFeedResourceTest {
         assertEquals(CoAP.ResponseCode.CONFLICT, response.getCode());
         assertEquals("Data feed with given label already exists", response.getResponseText());
 
-        newDataFeed.setLabel(anotherLabel);
-        requestBody =  JSONSerializer.serializeDataFeed(newDataFeed);
+        df3.setLabel(anotherLabel);
+        requestBody =  JSONSerializer.serializeDataFeed(df3);
+        client.setURI(coapUrl + "/sensor/t1/dataFeed");
         response = sendPostRequest(client, requestBody);
         assertEquals(CoAP.ResponseCode.CONFLICT, response.getCode());
         assertEquals("Simple sensor already contains data feed", response.getResponseText());
@@ -155,8 +163,8 @@ public class DataFeedResourceTest {
         client.setURI(requestUri);
 
         CoapResponse response = sendPutRequest(client, requestBody);
-        assertEquals(CoAP.ResponseCode.BAD_REQUEST, response.getCode());
-        assertEquals("Label of the data feed does not match label in the query", response.getResponseText());
+        assertEquals(CoAP.ResponseCode.UNPROCESSABLE_ENTITY, response.getCode());
+        assertEquals("DataFeed must have same label", response.getResponseText());
 
         newDataFeed.setLabel(dataFeedLabel);
         requestBody =  JSONSerializer.serializeDataFeed(newDataFeed);
@@ -168,17 +176,9 @@ public class DataFeedResourceTest {
     @Test
     public void deleteSimpleDataFeed() throws ConnectorException, IOException {
         String dataFeedLabel = t1.getDataFeed().getLabel();
-
-        String requestUri = coapUrl + "/sensor/t1/dataFeed";
+        String requestUri = buildRequestUri("/sensor/t1/dataFeed", dataFeedLabel);
         client.setURI(requestUri);
-
         CoapResponse response = client.delete();
-        assertEquals(CoAP.ResponseCode.BAD_REQUEST, response.getCode());
-        assertEquals("Label is missing", response.getResponseText());
-
-        requestUri = buildRequestUri("/sensor/t1/dataFeed", dataFeedLabel);
-        client.setURI(requestUri);
-        response = client.delete();
         assertEquals(CoAP.ResponseCode.DELETED, response.getCode());
         assertEquals(0, t1.getDataFeeds().size());
     }

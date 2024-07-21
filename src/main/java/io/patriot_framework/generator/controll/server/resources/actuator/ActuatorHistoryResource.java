@@ -32,12 +32,12 @@ import java.util.Deque;
  * Children resource of {@link ActuatorRootResource}. It handles all requests
  * aimed for history states of {@link StateMachine}.
  */
-public class StateMachineHistoryResource extends CoapResource {
+public class ActuatorHistoryResource extends CoapResource {
 
     Actuator actuator;
     private ObjectMapper mapper;
 
-    public StateMachineHistoryResource(Actuator actuator) {
+    public ActuatorHistoryResource(Actuator actuator) {
         super("stateHistory");
         this.actuator = actuator;
 
@@ -56,7 +56,11 @@ public class StateMachineHistoryResource extends CoapResource {
         Deque<String> stateHistory = actuator.getStateMachine().getStateHistory();
         actuator.getStateMachine().clearStateHistory();
         try {
-            exchange.respond(CoAP.ResponseCode.CONTENT, mapper.writeValueAsString(stateHistory));
+            exchange.respond(
+                    CoAP.ResponseCode.CONTENT,
+                    mapper.writeValueAsString(stateHistory)
+
+            );
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

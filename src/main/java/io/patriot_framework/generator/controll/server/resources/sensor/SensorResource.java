@@ -16,6 +16,8 @@
 
 package io.patriot_framework.generator.controll.server.resources.sensor;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
@@ -47,9 +49,8 @@ public class SensorResource extends CoapResource {
     public SensorResource(Sensor sensor) {
         super(sensor.getLabel());
         this.sensor = sensor;
-
         getAttributes().setTitle("Device resources");
-        add(new DataFeedResource(sensor));
+        add(new DataFeedRootResource(sensor, new ObjectMapper(new JsonFactory())));
     }
 
 

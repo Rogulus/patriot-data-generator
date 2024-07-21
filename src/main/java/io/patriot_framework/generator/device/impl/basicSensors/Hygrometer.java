@@ -31,5 +31,4 @@ public class Hygrometer extends AbstractSimpleSensor {
                       @JsonProperty("dataFeed") DataFeed dataFeed) {
         super(label, dataFeed);
     }
-
 }

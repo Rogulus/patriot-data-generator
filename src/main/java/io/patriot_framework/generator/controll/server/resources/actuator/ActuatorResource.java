@@ -46,7 +46,7 @@ public class ActuatorResource extends CoapResource {
         this.actuator = actuator;
 
         getAttributes().setTitle("Actuator resources");
-        add(new StateMachineHistoryResource(actuator));
+        add(new ActuatorHistoryResource(actuator));
     }
 
     /**

@@ -31,5 +31,4 @@ public class Thermometer extends AbstractSimpleSensor {
                        @JsonProperty("dataFeed") DataFeed dataFeed) {
         super(label, dataFeed);
     }
-
 }

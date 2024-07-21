@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-public class StateMachineHistoryResourceTest {
+public class ActuatorHistoryResourceTest {
     String ip = "127.0.0.1";
     String port = "5683";
     String rootResource = "/";

@@ -31,8 +31,7 @@ public abstract class AbstractSimpleSensor extends AbstractSensor implements Sim
     }
 
     public AbstractSimpleSensor(String label, DataFeed dataFeed) {
-        super(label);
-        setDataFeed(dataFeed);
+        super(label, dataFeed);
     }
 
     @Override
