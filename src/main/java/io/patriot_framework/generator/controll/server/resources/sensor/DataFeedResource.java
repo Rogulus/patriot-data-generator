@@ -41,6 +41,15 @@ public class DataFeedResource extends CoapResource {
     private String myLabel;
     private ObjectMapper mapper;
 
+    private String getResourcePath() {
+        var parent = getParent();
+        StringBuilder path = new StringBuilder(getPath());
+        while (parent != null) {
+            path.insert(0, parent.getPath() + "/");
+            parent = parent.getParent();
+        }
+        return path.toString();
+    }
 
     /**
      * Constructs a new instance of NewDataFeedResource.
@@ -55,6 +64,7 @@ public class DataFeedResource extends CoapResource {
         this.sensor = sensor;
         this.mapper = mapper;
     }
+
 
 
     private DataFeed getMyDataFeed() {
@@ -111,12 +121,14 @@ public class DataFeedResource extends CoapResource {
         if(myDataFeed != null) {
             sensor.removeDataFeed(myDataFeed);
             sensor.addDataFeed(newDataFeed);
+            LOGGER.warn("Data feed updated");
             exchange.respond(CoAP.ResponseCode.CHANGED);
             return;
         }
 
         try {
             sensor.addDataFeed(newDataFeed);
+            getParent().add(new DataFeedResource(sensor, newDataFeed, mapper));
             exchange.respond(CoAP.ResponseCode.CREATED);
         } catch (UnsupportedOperationException exception) {
             exchange.respond(CoAP.ResponseCode.CONFLICT, exception.getMessage());
@@ -140,6 +152,7 @@ public class DataFeedResource extends CoapResource {
         Resource parent = getParent();
         if (parent != null) {
             parent.delete(this);
+            LOGGER.info("Coap resource on path: " + getURI() + "deleted");
         }
     }
 }

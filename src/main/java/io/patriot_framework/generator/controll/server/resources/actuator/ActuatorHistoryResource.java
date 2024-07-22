@@ -19,11 +19,15 @@ package io.patriot_framework.generator.controll.server.resources.actuator;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.patriot_framework.generator.controll.server.resources.sensor.DataFeedRootResource;
 import io.patriot_framework.generator.device.passive.actuators.Actuator;
 import io.patriot_framework.generator.device.passive.actuators.stateMachine.StateMachine;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Deque;
 
@@ -36,6 +40,7 @@ public class ActuatorHistoryResource extends CoapResource {
 
     Actuator actuator;
     private ObjectMapper mapper;
+    public static final Logger LOGGER = LoggerFactory.getLogger(DataFeedRootResource.class);
 
     public ActuatorHistoryResource(Actuator actuator) {
         super("stateHistory");
@@ -49,20 +54,28 @@ public class ActuatorHistoryResource extends CoapResource {
     /**
      * Method returns information state history of state machine and resets it
      *
-     * @param exchange the CoapExchange for the simple API
+     * @param exchange The CoAP exchange object for handling the request and response
      */
     @Override
     public void handleGET(CoapExchange exchange) {
         Deque<String> stateHistory = actuator.getStateMachine().getStateHistory();
         actuator.getStateMachine().clearStateHistory();
+        String body;
         try {
+            body = mapper.writeValueAsString(stateHistory);
+        } catch (JsonProcessingException e) {
+            LOGGER.warn(e.toString());
             exchange.respond(
                     CoAP.ResponseCode.CONTENT,
-                    mapper.writeValueAsString(stateHistory)
-
-            );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+                    "null",
+                    MediaTypeRegistry.APPLICATION_JSON);
+            return;
         }
+
+        exchange.respond(
+                CoAP.ResponseCode.CONTENT,
+                body,
+                MediaTypeRegistry.APPLICATION_JSON
+        );
     }
 }

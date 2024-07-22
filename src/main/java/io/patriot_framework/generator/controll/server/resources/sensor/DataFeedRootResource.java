@@ -24,6 +24,7 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.core.server.resources.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +43,9 @@ public class DataFeedRootResource extends CoapResource {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(DataFeedRootResource.class);
 
+    private void logNewDataFeedResource(Resource resource) {
+        LOGGER.info("created new DataFeed resource on path: " + resource.getURI());
+    }
 
     /**
      * Constructs a DataFeedRootResource object with the given sensor and ObjectMapper.
@@ -54,7 +58,9 @@ public class DataFeedRootResource extends CoapResource {
         mySensor = sensor;
         this.mapper = mapper;
         for(var dataFeed: sensor.getDataFeeds()) {
-            add(new DataFeedResource(sensor, dataFeed, mapper));
+            var newResource = new DataFeedResource(sensor, dataFeed, mapper);
+            add(newResource);
+            logNewDataFeedResource(newResource);
         }
     }
 
@@ -121,6 +127,9 @@ public class DataFeedRootResource extends CoapResource {
             return;
         }
 
+        var newResource = new DataFeedResource(mySensor, newDataFeed, mapper);
+        add(newResource);
+        logNewDataFeedResource(newResource);
         exchange.respond(CoAP.ResponseCode.CREATED);
     }
 }

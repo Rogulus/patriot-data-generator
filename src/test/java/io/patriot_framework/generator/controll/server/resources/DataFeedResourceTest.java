@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.controll;
+package io.patriot_framework.generator.controll.server.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.patriot_framework.generator.dataFeed.ConstantDataFeed;
@@ -118,9 +118,9 @@ public class DataFeedResourceTest {
     }
 
 
-
     @Test
     public void postSimpleDataFeed() throws ConnectorException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
         String anotherLabel = "anotherLabel";
 
         DataFeed df1 = new ConstantDataFeed(25);
@@ -135,7 +135,8 @@ public class DataFeedResourceTest {
         CoapResponse response;
 
         String requestBody =  JSONSerializer.serializeDataFeed(df3);
-        client.setURI(coapUrl + "/sensor/dht/dataFeed");
+        String uri = coapUrl + "/sensor/dht/dataFeed";
+        client.setURI(uri);
         response = sendPostRequest(client, requestBody);
         assertEquals(CoAP.ResponseCode.CREATED, response.getCode());
 
@@ -149,6 +150,14 @@ public class DataFeedResourceTest {
         response = sendPostRequest(client, requestBody);
         assertEquals(CoAP.ResponseCode.CONFLICT, response.getCode());
         assertEquals("Simple sensor already contains data feed", response.getResponseText());
+
+        // assert that new data-feed path was created
+        df3.setLabel("df3");
+        String getUri = buildRequestUri("/sensor/dht/dataFeed", df3.getLabel());
+        client.setURI(getUri);
+        response = client.get();
+        assertEquals(CoAP.ResponseCode.CONTENT, response.getCode());
+        assertEquals(objectMapper.writeValueAsString(df3), response.getResponseText());
     }
 
     @Test

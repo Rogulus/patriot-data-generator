@@ -22,6 +22,9 @@ import io.patriot_framework.generator.device.passive.sensors.Sensor;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Resource handling basic functionality for specific {@link Sensor}.
  * Its name is created from label of particular Sensor.
@@ -33,10 +36,13 @@ public class SensorResource extends CoapResource {
      */
     public static final String PATTERN = "/sensor/%s$";
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(DataFeedRootResource.class);
+
     /**
      * Instance of an Sensor for which is resource created for
      */
     private Sensor sensor;
+
 
     /**
      * Constructor passes label from sensor to the parent {@link CoapResource}, which creates
@@ -49,8 +55,11 @@ public class SensorResource extends CoapResource {
     public SensorResource(Sensor sensor) {
         super(sensor.getLabel());
         this.sensor = sensor;
-        getAttributes().setTitle("Device resources");
-        add(new DataFeedRootResource(sensor, new ObjectMapper(new JsonFactory())));
+        getAttributes().setTitle("Sensor resources");
+        add(new DataFeedRootResource(
+                sensor,
+                new ObjectMapper(new JsonFactory())));
+        LOGGER.info("created new coap resource on path: " + getURI());
     }
 
 
@@ -65,6 +74,7 @@ public class SensorResource extends CoapResource {
     public void handleGET(CoapExchange exchange) {
         exchange.respond(sensor.toString());
     }
+
 
     /**
      * Method for enabling and disabling of sensor functionality.
