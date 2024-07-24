@@ -17,9 +17,8 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventSimulator.Time.DiscreteTime;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.Simulation;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.Simulation;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.HashSet;
@@ -35,17 +34,17 @@ public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt d
     private Set<Simulation> simulations = new HashSet<>();
     private TreeMap<Time, TimeActions> actionsQueue = new TreeMap<>();
     private Hashtable<String, Set<Simulation>> topicSubscribers = new Hashtable<>();  // topic to subscribers
-    private Time currentTime = new DiscreteTime();
+    private Time currentTime;
 
 
-    public EventBusImpl() {
-        currentTime.setValue(0);
+    public EventBusImpl(Time time) {
+        currentTime = time;
     }
 
 
     @Override
     public Time getTime() {
-        return (DiscreteTime)currentTime.clone();
+        return (Time)currentTime.clone();
     }
 
 

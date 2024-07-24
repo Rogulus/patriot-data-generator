@@ -18,6 +18,7 @@ package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
 
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.dataFeed.NormalDistVariateDataFeed;
@@ -26,7 +27,7 @@ import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBa
 import io.patriot_framework.generator.eventSimulator.Time.Time;
 
 public class Fire extends SimulationBase {
-    private Time time = new DiscreteTime();
+    private Time time = new DiscreteTimeSeconds();
     private int ignitionTemp;
     private UndirectedGraphSpace space;
 
@@ -44,7 +45,7 @@ public class Fire extends SimulationBase {
     }
 
     public void init() {
-        registerRecurringAwake(new DiscreteTime(1));
+        registerRecurringAwake(new DiscreteTime(1000L, 1L));
         subscribe("ignite-fire");
     }
 

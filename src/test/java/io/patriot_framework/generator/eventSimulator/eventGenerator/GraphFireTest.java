@@ -17,11 +17,10 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.device.impl.basicSensors.Default;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.Conductor;
-import io.patriot_framework.generator.eventSimulator.Time.DiscreteTime;
+import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
+import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.ChildWithMatches;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.Fire;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.RoomTempDataFeed;
@@ -76,8 +75,8 @@ public class GraphFireTest {
 
         System.out.println("THREADID:");
         System.out.println(Thread.currentThread().getId());
-        conductor.runUntil(new DiscreteTime(5));
-        conductor.runRealTimeFor(new DiscreteTime(5));
+        conductor.runUntil(new DiscreteTimeSeconds(5L));
+        conductor.runRealTimeFor(new DiscreteTimeSeconds(5L));
         Thread.sleep(3000);
         conductor.pause();
         System.out.println("hsdjsd");
@@ -85,9 +84,9 @@ public class GraphFireTest {
 
 
         System.out.println("11111");
-        conductor.runUntil(new DiscreteTime(20));
+        conductor.runUntil(new DiscreteTimeSeconds(20L));
         System.out.println("Sd");
-        conductor.runRealTimeFor(new DiscreteTime(5));
+        conductor.runRealTimeFor(new DiscreteTimeSeconds(5L));
         System.out.println("dsd");
         Thread.sleep(5010);
         conductor.runRealTime();

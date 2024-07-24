@@ -14,19 +14,13 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.Time;
+package io.patriot_framework.generator.eventSimulator.coordinates.cartesian;
 
-public interface Time extends Comparable<Time>, Cloneable{
+import io.patriot_framework.generator.eventSimulator.coordinates.Coordinate;
 
-    Time setMillis(long millis);
+import java.util.List;
 
-    static int compare(Time o, Time o2) {
-        return Long.compare(o.getMillis(), o2.getMillis());
-    }
-
-    Time plus(Time other);
-    Time minus(Time other);
-    long getMillis();
-    int compareTo(Time other);
-    Object clone();
+public interface CartesianCoordinate extends Coordinate<CartesianCoordinate> {
+    public List<Double> getCoordinateValues();
+    void setCoordinateValues(List<Double> coordinateValues);
 }

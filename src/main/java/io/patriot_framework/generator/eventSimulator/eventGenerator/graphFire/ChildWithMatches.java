@@ -17,10 +17,10 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
-import io.patriot_framework.generator.eventSimulator.Time.DiscreteTime;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
+import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
+import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ import java.util.Random;
 
 public class ChildWithMatches extends SimulationBase {
     private UndirectedGraphCoordinate coordinate;
-    private Time time = new DiscreteTime();
+    private Time time = new DiscreteTimeSeconds();
     private Random random = new Random();
 
     public ChildWithMatches(UndirectedGraphCoordinate coordinate) {
@@ -38,7 +38,7 @@ public class ChildWithMatches extends SimulationBase {
 
     @Override
     public void init() {
-        registerAwake(new DiscreteTime(0));
+        registerAwake(new DiscreteTimeSeconds());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ChildWithMatches extends SimulationBase {
             System.out.println("Dite zapaluje: " + coordinate.getName());
         } else {
             time = eventBus.getTime();
-            time.setValue(time.getMillis() + 5000L);
+            time.setMillis(time.getMillis() + 5000L);
             registerAwake(time);
         }
     }

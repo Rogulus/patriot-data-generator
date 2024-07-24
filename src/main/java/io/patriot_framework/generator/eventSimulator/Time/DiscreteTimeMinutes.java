@@ -16,17 +16,26 @@
 
 package io.patriot_framework.generator.eventSimulator.Time;
 
-public interface Time extends Comparable<Time>, Cloneable{
-
-    Time setMillis(long millis);
-
-    static int compare(Time o, Time o2) {
-        return Long.compare(o.getMillis(), o2.getMillis());
+public class DiscreteTimeMinutes extends AbstractDiscreteTime {
+    @Override
+    protected long millisecondsInUnit() {
+        return 60 * 1000;
     }
 
-    Time plus(Time other);
-    Time minus(Time other);
-    long getMillis();
-    int compareTo(Time other);
-    Object clone();
+    @Override
+    protected String unitName() {
+        return "min";
+    }
+
+    public DiscreteTimeMinutes() {
+        super();
+    }
+
+    public DiscreteTimeMinutes(long timeInUnits) {
+        super(timeInUnits);
+    }
+
+    public DiscreteTimeMinutes(Time time) {
+        super(time);
+    }
 }

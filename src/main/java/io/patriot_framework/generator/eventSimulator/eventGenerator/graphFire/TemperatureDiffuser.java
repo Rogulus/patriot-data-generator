@@ -17,6 +17,7 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTime;
@@ -26,7 +27,7 @@ import io.patriot_framework.generator.eventSimulator.Time.Time;
 import java.util.HashSet;
 
 public class TemperatureDiffuser extends SimulationBase {
-    private Time time = new DiscreteTime();
+    private Time time = new DiscreteTimeSeconds();
     private UndirectedGraphSpace space;
 
     public TemperatureDiffuser(UndirectedGraphSpace space) {
@@ -39,7 +40,7 @@ public class TemperatureDiffuser extends SimulationBase {
     }
 
     public void init() {
-        registerRecurringAwake(new DiscreteTime(1));
+        registerRecurringAwake(new DiscreteTime(1000L, 1L));
     }
 
     @Override

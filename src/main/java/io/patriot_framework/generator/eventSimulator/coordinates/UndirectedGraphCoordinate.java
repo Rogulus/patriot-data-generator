@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.toMap;
-
 // todo udelat vahovy graf a toto bude specialni pripad
 
 
@@ -44,7 +42,7 @@ public class UndirectedGraphCoordinate implements Coordinate<UndirectedGraphCoor
 
 
     @Override
-    public double distance(UndirectedGraphCoordinate other) {
+    public Double distance(UndirectedGraphCoordinate other) {
         if (! space.equals(other.space)) {
             throw new IllegalArgumentException("TODO"); // todo
         }

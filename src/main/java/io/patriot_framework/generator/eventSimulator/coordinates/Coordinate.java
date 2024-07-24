@@ -17,5 +17,6 @@
 package io.patriot_framework.generator.eventSimulator.coordinates;
 
 public interface Coordinate<X extends Coordinate> {
-    public double distance(X coordinate);
+    public Double distance(X coordinate);
+
 }

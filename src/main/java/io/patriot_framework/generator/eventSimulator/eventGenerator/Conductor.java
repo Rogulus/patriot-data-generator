@@ -16,6 +16,7 @@
 
 package io.patriot_framework.generator.eventSimulator.eventGenerator;
 
+import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBus;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusImpl;
@@ -34,7 +35,7 @@ public class Conductor implements Runnable{
     private boolean running;
 
     public Conductor() { // todo pridat moznost dat jinou implementaci
-        this.eventBus = new EventBusImpl();
+        this.eventBus = new EventBusImpl(new DiscreteTimeSeconds(0)); // todo moza zacit od jineho casu?
     }
 
     public void addSimulation(SimulationBase simulation) {
