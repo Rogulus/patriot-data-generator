@@ -59,6 +59,10 @@ public abstract class AbstractDiscreteTime implements Time, Cloneable {
         return this;
     }
 
+    public long getTimeInUnits() {
+        return timeInUnits;
+    }
+
     @Override
     public AbstractDiscreteTime setMillis(long millis) {
         this.timeInUnits = millis/millisInUnit;

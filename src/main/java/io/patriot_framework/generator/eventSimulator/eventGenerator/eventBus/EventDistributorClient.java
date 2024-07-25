@@ -14,28 +14,12 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.Time;
+package io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus;
 
-public class ContinuousTimeSeconds extends AbstractContinuousTime {
-    @Override
-    protected long millisecondsInUnit() {
-        return 1000;
-    }
+import io.patriot_framework.generator.Data;
 
-    @Override
-    protected String unitName() {
-        return "sec";
-    }
-
-    public ContinuousTimeSeconds() {
-        super();
-    }
-
-    public ContinuousTimeSeconds(double timeInUnits) {
-        super(timeInUnits);
-    }
-
-    public ContinuousTimeSeconds(Time time) {
-        super(time);
-    }
+public interface EventDistributorClient {
+    void init();
+    void awake();
+    void receive(Data message, String topic);
 }

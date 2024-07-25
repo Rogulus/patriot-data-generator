@@ -59,6 +59,10 @@ public abstract class AbstractContinuousTime implements Time, Cloneable {
         return this;
     }
 
+    public double getTimeInUnits() {
+        return timeInUnits;
+    }
+
     @Override
     public AbstractContinuousTime setMillis(long millis) {
         this.timeInUnits = millis/((double)millisInUnit);

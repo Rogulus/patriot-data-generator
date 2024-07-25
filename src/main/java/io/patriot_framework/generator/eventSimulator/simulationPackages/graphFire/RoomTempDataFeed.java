@@ -14,14 +14,14 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
+package io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.dataFeed.DataFeed;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
-public class RoomTempDataFeed extends SimulationBase implements DataFeed {
+public class RoomTempDataFeed extends EventBusClientBase implements DataFeed {
     private String label;
     private Integer lastValue = -2;
     private Integer temperature = -2;

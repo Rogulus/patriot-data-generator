@@ -36,4 +36,9 @@ public abstract class CartesianCoordinateBase implements CartesianCoordinate{
 
         return Math.sqrt(sumOfSquares);
     }
+
+    @Override
+    public int getDimension() {
+        return this.getCoordinateValues().size();
+    }
 }

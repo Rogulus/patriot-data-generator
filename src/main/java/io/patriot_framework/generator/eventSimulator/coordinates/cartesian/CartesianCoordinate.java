@@ -23,4 +23,5 @@ import java.util.List;
 public interface CartesianCoordinate extends Coordinate<CartesianCoordinate> {
     public List<Double> getCoordinateValues();
     void setCoordinateValues(List<Double> coordinateValues);
+    int getDimension();
 }

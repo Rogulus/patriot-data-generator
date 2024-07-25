@@ -18,7 +18,7 @@ package io.patriot_framework.generator.eventSimulator.eventGenerator.simulationA
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.controll.client.CoapActuatorHandler;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
 import org.eclipse.californium.elements.exception.ConnectorException;
 
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 
-public abstract class ActuatorAdapterBase extends SimulationBase {
+public abstract class ActuatorAdapterBase extends EventBusClientBase {
     Deque<String> stateHistory;
     private CoapActuatorHandler coapActuatorHandler;
     Time pollingInterval;

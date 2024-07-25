@@ -14,22 +14,20 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator;
+package io.patriot_framework.generator.eventSimulator.eventGenerator.conductor;
 
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBus;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusImpl;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Conductor implements Runnable{
-    private EventBus eventBus;
-    private Set<SimulationBase> simulations = new HashSet<>();
+    private final EventBus eventBus;
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final Object shutdownLock = new Object();
     private boolean running;
@@ -38,10 +36,9 @@ public class Conductor implements Runnable{
         this.eventBus = new EventBusImpl(new DiscreteTimeSeconds(0)); // todo moza zacit od jineho casu?
     }
 
-    public void addSimulation(SimulationBase simulation) {
+    public void addSimulation(EventBusClientBase simulation) {
         simulation.setEventBus(eventBus);
         simulation.init();
-        simulations.add(simulation);
     }
 
     long startRealTime;

@@ -17,9 +17,9 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.simulationAdapter;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
-public class SimulationAdapterBase extends SimulationBase {
+public class SimulationAdapterBase extends EventBusClientBase {
 
     //todo neni hotove udelat abstraktni interface a vsechno mozna je to sracka klidne tohle smaz
 

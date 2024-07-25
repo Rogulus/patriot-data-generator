@@ -14,20 +14,20 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
+package io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-public class ChildWithMatches extends SimulationBase {
+public class ChildWithMatches extends EventBusClientBase {
     private UndirectedGraphCoordinate coordinate;
     private Time time = new DiscreteTimeSeconds();
     private Random random = new Random();

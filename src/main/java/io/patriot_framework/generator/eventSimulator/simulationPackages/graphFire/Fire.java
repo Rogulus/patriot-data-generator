@@ -14,19 +14,18 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
+package io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire;
 
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.dataFeed.NormalDistVariateDataFeed;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
+import io.patriot_framework.generator.eventSimulator.Time.Time;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
-import io.patriot_framework.generator.dataFeed.NormalDistVariateDataFeed;
-import io.patriot_framework.generator.eventSimulator.Time.DiscreteTime;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.SimulationBase;
-import io.patriot_framework.generator.eventSimulator.Time.Time;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
-public class Fire extends SimulationBase {
+public class Fire extends EventBusClientBase {
     private Time time = new DiscreteTimeSeconds();
     private int ignitionTemp;
     private UndirectedGraphSpace space;
@@ -45,7 +44,7 @@ public class Fire extends SimulationBase {
     }
 
     public void init() {
-        registerRecurringAwake(new DiscreteTime(1000L, 1L));
+        registerRecurringAwake(new DiscreteTimeSeconds(1L));
         subscribe("ignite-fire");
     }
 

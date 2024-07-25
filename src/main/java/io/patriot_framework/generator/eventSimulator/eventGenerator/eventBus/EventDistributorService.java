@@ -16,21 +16,18 @@
 
 package io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus;
 
+import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
 
-public interface EventBus extends EventDistributorService, Runnable{
+public interface EventDistributorService {
     Time getTime();
-    boolean tick();
-    void run();
+    void registerAwake(EventDistributorClient simulation , Time time);
+    void registerRecurringAwake(EventDistributorClient simulation, Time interval);
+    void registerRecurringAwake(EventDistributorClient simulation, Time interval, Time startTime);
 
-
-    /**
-     *
-     * @param until
-     * @return true if the simulation can continue
-     */
-    public boolean runUntil(Time until);
-
-    public Time getNextStepTime();
-
+    // Deletes all recurring awakes
+    void unregisterRecurringAwake(EventDistributorClient simulation);
+    void publish(Data message, String topic);
+    void publishOnTime(Data message, String topic, Time time);
+    void subscribe(EventDistributorClient simulation, String topic);
 }

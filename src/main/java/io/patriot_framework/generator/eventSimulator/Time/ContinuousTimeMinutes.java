@@ -31,7 +31,7 @@ public class ContinuousTimeMinutes extends AbstractContinuousTime {
         super();
     }
 
-    public ContinuousTimeMinutes(long timeInUnits) {
+    public ContinuousTimeMinutes(double timeInUnits) {
         super(timeInUnits);
     }
 

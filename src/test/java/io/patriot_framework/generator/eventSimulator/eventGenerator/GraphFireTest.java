@@ -21,10 +21,11 @@ import io.patriot_framework.generator.device.impl.basicSensors.Default;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.ChildWithMatches;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.Fire;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.RoomTempDataFeed;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire.TemperatureDiffuser;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.conductor.Conductor;
+import io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire.ChildWithMatches;
+import io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire.Fire;
+import io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire.RoomTempDataFeed;
+import io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire.TemperatureDiffuser;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

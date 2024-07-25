@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator.graphFire;
+package io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire;
 
 import java.util.Objects;
 

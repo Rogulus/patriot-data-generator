@@ -14,14 +14,10 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator;
+package io.patriot_framework.generator.eventSimulator.eventGenerator.conductor;
 
-import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBus;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventDistributorService;
 
-public interface Simulation {
-    void awake();
-    void receive(Data message, String topic);
-
-    void setEventBus(EventBus eventBus);  // todo toto patri do jineho interface - interface ktery souvisi s Conductorem
+public interface ControllableByConductor {
+    void setEventBus(EventDistributorService eventBus);
 }

@@ -18,10 +18,8 @@ package io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.Simulation;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -30,10 +28,9 @@ import java.util.TreeMap;
 
 
 
-public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt druhy interface jeden vuci simulacim a druhy vuci conductorovi
-    private Set<Simulation> simulations = new HashSet<>();
+public class EventBusImpl implements EventBus {
     private TreeMap<Time, TimeActions> actionsQueue = new TreeMap<>();
-    private Hashtable<String, Set<Simulation>> topicSubscribers = new Hashtable<>();  // topic to subscribers
+    private Hashtable<String, Set<EventDistributorClient>> topicSubscribers = new Hashtable<>();  // topic to subscribers
     private Time currentTime;
 
 
@@ -49,39 +46,27 @@ public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt d
 
 
     @Override
-    public void registerSimulation(Simulation simulation) {  // todo k cemu je to dobre? proc nestaci subscribe
-        simulations.add(simulation);
-    }
-
-
-    @Override
-    public void unregister(Simulation simulation) {
-        simulations.remove(simulation);
-    }
-
-
-    @Override
-    public void registerAwake(Simulation simulation , Time time) {
+    public void registerAwake(EventDistributorClient simulation , Time time) {
         TimeActions actions = actionsQueue.computeIfAbsent(time, k -> new TimeActions());
         actions.awakeApplicants.add(simulation);
     }
 
 
     @Override
-    public void registerRecurringAwake(Simulation simulation, Time interval) {
+    public void registerRecurringAwake(EventDistributorClient simulation, Time interval) {
         TimeActions actions = actionsQueue.computeIfAbsent(currentTime.plus(interval), k -> new TimeActions());
         actions.recurringAwakeApplicants.add(new ImmutablePair<>(interval, simulation));
     }
 
 
-    public void registerRecurringAwake(Simulation simulation, Time interval, Time startTime) {
+    public void registerRecurringAwake(EventDistributorClient simulation, Time interval, Time startTime) {
         if(startTime.getMillis() <= currentTime.getMillis()) return;
         TimeActions actions = actionsQueue.computeIfAbsent(startTime, k -> new TimeActions());
         actions.recurringAwakeApplicants.add(new ImmutablePair<>(interval, simulation));
     }
 
 
-    public void unregisterRecurringAwake(Simulation simulation) {
+    public void unregisterRecurringAwake(EventDistributorClient simulation) {
         for(var timeActions: actionsQueue.entrySet()) {
             timeActions.getValue().recurringAwakeApplicants.removeIf(
                     recurringAwakeApplicant -> recurringAwakeApplicant.getRight().equals(simulation)
@@ -91,8 +76,8 @@ public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt d
 
 
     @Override
-    public void subscribe(Simulation simulation, String topic) {
-        Set<Simulation> topicSubscribers = this.topicSubscribers.computeIfAbsent(topic, k -> new LinkedHashSet<>());  // todo equeals se nesmi menit po vlozeni
+    public void subscribe(EventDistributorClient simulation, String topic) {
+        Set<EventDistributorClient> topicSubscribers = this.topicSubscribers.computeIfAbsent(topic, k -> new LinkedHashSet<>());  // todo equeals se nesmi menit po vlozeni
         topicSubscribers.add(simulation);
     }
 
@@ -110,14 +95,14 @@ public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt d
     }
 
 
-    private void awakeSimulations(Set<Simulation> simulations) {
-        for (Simulation simulation: simulations) {
+    private void awakeSimulations(Set<EventDistributorClient> simulations) {
+        for (EventDistributorClient simulation: simulations) {
             simulation.awake();
         }
     }
 
 
-    private void awakeRecurringSimulations(Set<ImmutablePair<Time, Simulation>> simulations) {
+    private void awakeRecurringSimulations(Set<ImmutablePair<Time, EventDistributorClient>> simulations) {
         for (var recurringAwake: simulations) {
             recurringAwake.getRight().awake();
             registerRecurringAwake(recurringAwake.getRight(), recurringAwake.getLeft());
@@ -128,7 +113,7 @@ public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt d
     private void deliverEvents(Set<Event> events) {
         for(Event event: events) {
             if(topicSubscribers.get(event.topic) != null) {  // todo udelat to nejak hezci
-                for (Simulation receiver : topicSubscribers.get(event.topic)) {
+                for (EventDistributorClient receiver : topicSubscribers.get(event.topic)) {
                     receiver.receive(event.message, event.topic);
                 }
             }
@@ -192,8 +177,8 @@ public class EventBusImpl implements EventBus, Runnable{ // todo nemelo by byt d
 
 
     private class TimeActions {
-        public Set<ImmutablePair<Time, Simulation>> recurringAwakeApplicants = new LinkedHashSet<>();
-        public Set<Simulation> awakeApplicants = new LinkedHashSet<>();
+        public Set<ImmutablePair<Time, EventDistributorClient>> recurringAwakeApplicants = new LinkedHashSet<>();
+        public Set<EventDistributorClient> awakeApplicants = new LinkedHashSet<>();
         public Set<Event> events = new LinkedHashSet<>();
     }
 

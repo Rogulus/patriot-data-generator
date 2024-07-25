@@ -76,6 +76,30 @@ public class StandardCartesianCoordinate extends CartesianCoordinateBase {
         return true;
     }
 
+    public StandardCartesianCoordinate plus(CartesianCoordinate other) {
+        if(! isValidDimension(other.getDimension())) {
+            return null;
+        }
+
+        var myIt = coordinates.iterator();
+        var otherIt = other.getCoordinateValues().iterator();
+        for (var idx = 0; idx < dimensions; idx++){
+            coordinates.set(idx,  otherIt.next() + myIt.next());
+        }
+        return this;
+    }
+
+    public StandardCartesianCoordinate multiply(double multiplier) {
+        var myIt = coordinates.iterator();
+        for (var idx = 0; idx < dimensions; idx++){
+            coordinates.set(idx, myIt.next() * multiplier);
+        }
+        return this;
+    }
+
+    public StandardCartesianCoordinate minus(CartesianCoordinate other) {
+        return multiply(-1).plus(other).multiply(-1);
+    }
 
     @Override
     public boolean equals(Object o) {

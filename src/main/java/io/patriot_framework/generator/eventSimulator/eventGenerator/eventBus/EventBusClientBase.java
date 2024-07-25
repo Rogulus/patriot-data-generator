@@ -14,19 +14,18 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.eventGenerator;
+package io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus;
 
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBus;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.conductor.ControllableByConductor;
 
-public abstract class SimulationBase implements Simulation {
-    protected EventBus eventBus;
+public abstract class EventBusClientBase implements EventDistributorClient, ControllableByConductor {
+    protected EventDistributorService eventBus;
 
     @Override
-    public void setEventBus(EventBus eventBus) {
+    public void setEventBus(EventDistributorService eventBus) {
         this.eventBus = eventBus;
-        eventBus.registerSimulation(this);
     }
 
     protected void subscribe(String topic) {
@@ -39,6 +38,14 @@ public abstract class SimulationBase implements Simulation {
 
     protected void registerRecurringAwake(Time interval) {
         eventBus.registerRecurringAwake(this, interval);
+    }
+
+    public void registerRecurringAwake(Time interval, Time startTime) {
+        eventBus.registerRecurringAwake(this, interval, startTime);
+    }
+
+    public void unregisterRecurringAwake() {
+        eventBus.unregisterRecurringAwake(this);
     }
 
     protected void publish(Data message, String topic) {
