@@ -34,11 +34,19 @@ public class EventBusImpl implements EventBus {
     private Time currentTime;
 
 
+    /**
+     * Constructor of the class EventBusImpl
+     * @param time denotes start time of processing the messages
+     */
     public EventBusImpl(Time time) {
         currentTime = time;
     }
 
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Time getTime() {
         return (Time)currentTime.clone();
@@ -54,7 +62,7 @@ public class EventBusImpl implements EventBus {
 
     @Override
     public void registerRecurringAwake(EventDistributorClient simulation, Time interval) {
-        TimeActions actions = actionsQueue.computeIfAbsent(currentTime.plus(interval), k -> new TimeActions());
+        TimeActions actions = actionsQueue.computeIfAbsent(Time.plus(currentTime, interval), k -> new TimeActions());
         actions.recurringAwakeApplicants.add(new ImmutablePair<>(interval, simulation));
     }
 
@@ -183,6 +191,9 @@ public class EventBusImpl implements EventBus {
     }
 
 
+    /**
+     * This class holds information about ...
+     */
     public class Event {
         public Data message;
         public String topic;

@@ -20,6 +20,16 @@ public interface Time extends Comparable<Time>, Cloneable{
 
     Time setMillis(long millis);
 
+    static Time plus(Time t1, Time t2) {
+        Time newTime = (Time)t1.clone();
+        return newTime.plus(t2);
+    }
+
+    static Time minus(Time t1, Time t2) {
+        Time newTime = (Time)t1.clone();
+        return newTime.minus(t2);
+    }
+
     static int compare(Time o, Time o2) {
         return Long.compare(o.getMillis(), o2.getMillis());
     }

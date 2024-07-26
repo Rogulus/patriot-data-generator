@@ -63,7 +63,7 @@ public class GraphFireTest {
         ChildWithMatches toby = new ChildWithMatches(houseSpace.getCoordinate("livingRoom"));
         ChildWithMatches sandra = new ChildWithMatches(houseSpace.getCoordinate("garage"));
 
-        Conductor conductor = new Conductor();
+        Conductor conductor = new Conductor(new DiscreteTimeSeconds());
         conductor.addSimulation(diffuser);
         conductor.addSimulation(fire);
         conductor.addSimulation(toby);

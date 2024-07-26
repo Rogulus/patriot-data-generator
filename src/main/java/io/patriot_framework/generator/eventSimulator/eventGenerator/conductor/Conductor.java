@@ -16,10 +16,9 @@
 
 package io.patriot_framework.generator.eventSimulator.eventGenerator.conductor;
 
-import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBus;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusImpl;
 
 import java.util.concurrent.Executors;
@@ -32,8 +31,11 @@ public class Conductor implements Runnable{
     private final Object shutdownLock = new Object();
     private boolean running;
 
-    public Conductor() { // todo pridat moznost dat jinou implementaci
-        this.eventBus = new EventBusImpl(new DiscreteTimeSeconds(0)); // todo moza zacit od jineho casu?
+    public Conductor (EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+    public Conductor(Time time) { // todo pridat moznost dat jinou implementaci
+        this.eventBus = new EventBusImpl(time); // todo moza zacit od jineho casu?
     }
 
     public void addSimulation(EventBusClientBase simulation) {

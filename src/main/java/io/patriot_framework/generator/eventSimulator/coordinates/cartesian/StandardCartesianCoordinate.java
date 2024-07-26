@@ -26,7 +26,7 @@ public class StandardCartesianCoordinate extends CartesianCoordinateBase {
     private ArrayList<Double> coordinates;
 
     private boolean isValidDimension(int dimension) {
-        return dimension < 0 || dimension >= dimensions;
+        return dimension > 0 && dimension <= dimensions;
     }
 
     public StandardCartesianCoordinate(int dimensions) {
@@ -51,6 +51,7 @@ public class StandardCartesianCoordinate extends CartesianCoordinateBase {
         if(this.coordinates.isEmpty()) {
             throw new IllegalArgumentException("Cartesian coordinates must have at least one dimension");
         }
+        dimensions = this.coordinates.size();
     }
 
     public Double getCoordinate(int dimension) {

@@ -19,18 +19,35 @@ package io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
 
 public interface EventBus extends EventDistributorService, Runnable{
+    /**
+     * Returns current time on the bus.
+     * @return current time on the bus, if the bus is paused, it returns last processed time
+     */
     Time getTime();
+
+    /**
+     * Processes all the events in the next smallest time in which are planned some events.
+     * @return true if EventBus is able to do next step (some events are planned in the future)
+     */
     boolean tick();
+
+    /**
+     * Process all events from the start time, until some events are planned.
+     */
     void run();
 
 
     /**
-     *
-     * @param until
+     * Process all events which are planned before or on the given time.
+     * @param until time until which all events should be processed
      * @return true if the simulation can continue
      */
     public boolean runUntil(Time until);
 
+    /**
+     * Returns time of the next step
+     * @return time of the next step, null if there are no other events to process
+     */
     public Time getNextStepTime();
 
 }

@@ -76,7 +76,7 @@ public class DiscreteTimeSecondsTest {
     public void testPlus() {
         DiscreteTimeSeconds time1 = new DiscreteTimeSeconds(10);
         DiscreteTimeSeconds time2 = new DiscreteTimeSeconds(5);
-        AbstractDiscreteTime result = DiscreteTimeSeconds.plus(time1, time2);
+        AbstractDiscreteTime result = (AbstractDiscreteTime) Time.plus(time1, time2);
         assertEquals(15, result.timeInUnits);
     }
 

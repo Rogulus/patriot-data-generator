@@ -19,7 +19,6 @@ package io.patriot_framework.generator.eventSimulator.simulationPackages.equatio
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.Time.AbstractContinuousTime;
 import io.patriot_framework.generator.eventSimulator.Time.ContinuousTimeSeconds;
-import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.coordinates.cartesian.CartesianCoordinate;
 import io.patriot_framework.generator.eventSimulator.coordinates.cartesian.StandardCartesianCoordinate;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
@@ -39,16 +38,12 @@ public class LinearMotion extends EventBusClientBase {
 
     CartesianCoordinate getPositionInTime(AbstractContinuousTime time) {
         var currentPosition = new StandardCartesianCoordinate(startPosition.getCoordinateValues());
-        return currentPosition.plus(velocity.multiply(time.getTimeInUnits()));
+        var currentVelocity = new StandardCartesianCoordinate(velocity.getCoordinateValues());
+        return currentPosition.plus(currentVelocity.multiply(time.getTimeInUnits()));
     }
 
     @Override
     public void init() {
-        System.out.println("init");
-        registerAwake(new DiscreteTimeSeconds(1));
-        registerAwake(new DiscreteTimeSeconds(2));
-        registerAwake(new DiscreteTimeSeconds(3));
-
         registerRecurringAwake(awakeInterval);
         subscribe("linearMotionStop:" + id);
     }
@@ -61,7 +56,7 @@ public class LinearMotion extends EventBusClientBase {
 
     @Override
     public void awake() {
-        System.out.println("awake");
+        System.out.println("time in awake: " + eventBus.getTime());
         var time = new ContinuousTimeSeconds(eventBus.getTime());
         publish(new Data(StandardCartesianCoordinate.class, getPositionInTime(time)), "LinearMotionPosition:" + id);
     }

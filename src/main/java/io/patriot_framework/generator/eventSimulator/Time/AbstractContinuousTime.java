@@ -137,7 +137,7 @@ public abstract class AbstractContinuousTime implements Time, Cloneable {
     }
 
     public long getMillis() {
-        return (long)timeInUnits * millisInUnit;
+        return (long)(timeInUnits * millisInUnit);
     }
 
     @Override

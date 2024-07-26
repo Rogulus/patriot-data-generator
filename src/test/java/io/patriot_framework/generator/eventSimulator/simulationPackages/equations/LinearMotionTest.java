@@ -24,8 +24,6 @@ import io.patriot_framework.generator.eventSimulator.eventGenerator.conductor.Co
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class LinearMotionTest { //todo deleteme
 
 //    @BeforeAll
@@ -44,12 +42,12 @@ class LinearMotionTest { //todo deleteme
     public void test() {
 
 
-        var conductor = new Conductor();
+        var conductor = new Conductor(new ContinuousTimeSeconds(0));
 
         var car = new LinearMotion(
                 new StandardCartesianCoordinate(15.0),
                 new StandardCartesianCoordinate(-50.0),
-                new ContinuousTimeSeconds(2.0),
+                new ContinuousTimeSeconds(0.5),
                 "car1"
         );
 
@@ -70,6 +68,7 @@ class LinearMotionTest { //todo deleteme
 
         @Override
         public void receive(Data message, String topic) {
+            System.out.println("door adapter dostal recieve:");
             System.out.println(message.get(StandardCartesianCoordinate.class).getCoordinateValues());
         }
 
