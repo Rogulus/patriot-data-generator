@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.coordinates;
+package io.patriot_framework.generator.eventSimulator.coordinates.graph;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
-public class UndirectedGraphSpace {
+public class UndirectedGraphSpace implements GraphSpace<UndirectedGraphCoordinate>{
     private Graph<String, DefaultEdge> graph;
     private HashMap<String, UndirectedGraphCoordinate> coordinates;
 

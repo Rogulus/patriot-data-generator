@@ -20,7 +20,7 @@ import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.device.impl.basicSensors.Default;
 import io.patriot_framework.generator.device.passive.sensors.Sensor;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
-import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
+import io.patriot_framework.generator.eventSimulator.coordinates.graph.UndirectedGraphSpace;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.conductor.Conductor;
 import io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire.ChildWithMatches;
 import io.patriot_framework.generator.eventSimulator.simulationPackages.graphFire.Fire;

@@ -21,8 +21,8 @@ import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.dataFeed.NormalDistVariateDataFeed;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
-import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
-import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphSpace;
+import io.patriot_framework.generator.eventSimulator.coordinates.graph.UndirectedGraphCoordinate;
+import io.patriot_framework.generator.eventSimulator.coordinates.graph.UndirectedGraphSpace;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
 public class Fire extends EventBusClientBase {

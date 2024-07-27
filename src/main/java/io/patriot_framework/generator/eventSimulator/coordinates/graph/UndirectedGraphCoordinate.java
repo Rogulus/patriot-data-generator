@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.patriot_framework.generator.eventSimulator.coordinates;
+package io.patriot_framework.generator.eventSimulator.coordinates.graph;
 
 
 import io.patriot_framework.generator.Data;
@@ -28,8 +28,8 @@ import java.util.Objects;
 
 
 // todo pridat vertex name and data
-public class UndirectedGraphCoordinate implements Coordinate<UndirectedGraphCoordinate>{
-    private UndirectedGraphSpace space;
+public class UndirectedGraphCoordinate implements GraphCoordinate<UndirectedGraphCoordinate> {
+    private GraphSpace<UndirectedGraphCoordinate> space;
     private String coorinateName;
     private HashMap<String, Data> data;
 

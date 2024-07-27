@@ -19,7 +19,7 @@ package io.patriot_framework.generator.eventSimulator.simulationPackages.graphFi
 import io.patriot_framework.generator.Data;
 import io.patriot_framework.generator.eventSimulator.Time.DiscreteTimeSeconds;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
-import io.patriot_framework.generator.eventSimulator.coordinates.UndirectedGraphCoordinate;
+import io.patriot_framework.generator.eventSimulator.coordinates.graph.UndirectedGraphCoordinate;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
 import java.util.ArrayList;
