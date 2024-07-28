@@ -17,10 +17,9 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.simulationAdapter;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.dataFeed.DataFeed;
 
-
-
-public interface SimulationAdapterClient {
-    Data getData();
-    void SendData(Data data);
+public interface DataFeedMessenger {
+    public boolean changeDataFeed(DataFeed dataFeed);
+    public boolean updateData(Data data);
 }

@@ -103,6 +103,11 @@ public class DataFeedResource extends CoapResource {
     public void handlePUT(CoapExchange exchange) {
         exchange.accept();
         String body = exchange.getRequestText();
+        LOGGER.warn("Handler PUT data feed resource");
+        LOGGER.warn(body.toString());
+
+        System.out.println("Handler PUT data feed resource");
+        System.out.println(body);
 
         DataFeed newDataFeed;
         try {

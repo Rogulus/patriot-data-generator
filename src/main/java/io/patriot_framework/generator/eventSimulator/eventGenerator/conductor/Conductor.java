@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Conductor implements Runnable{
+public class Conductor {
     private final EventBus eventBus;
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final Object shutdownLock = new Object();

@@ -21,6 +21,8 @@ import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.WebLink;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.elements.exception.ConnectorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Set;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
  */
 public class CoapControlClient {
 
+    public static Logger LOGGER = LoggerFactory.getLogger(CoapControlClient.class);
     /**
      * The destination URI
      */
@@ -113,38 +116,19 @@ public class CoapControlClient {
      */
     public CoapDeviceHandler getDevice(String label) throws ConnectorException, IOException {
         Pattern pattern = Pattern.compile(String.format("/%s(/|$)", label));
-
-        Set<String> deviceEndpoints = client.discover()
-                .stream()
-                .map(WebLink::getURI)
-                .filter(pattern.asPredicate())
-                .collect(Collectors.toSet());
-
-        return new CoapDeviceHandler(this, deviceEndpoints, label);
+        return new CoapDeviceHandler(this, getEndpoints(pattern), label);
     }
 
-    public CoapSensorHandler getSensor(String label) throws ConnectorException, IOException {
+
+    public CoapSensorHandler getSensor(String label) {
         Pattern pattern = Pattern.compile(String.format("/sensor/%s(/|$)", label));
+        return new CoapSensorHandler(this, getEndpoints(pattern), label);
+    }
 
-        Set<String> deviceEndpoints = client.discover()
-                .stream()
-                .map(WebLink::getURI)
-                .filter(pattern.asPredicate())
-                .collect(Collectors.toSet());
-
-        return new CoapSensorHandler(this, deviceEndpoints, label);
-    } // todo obecne reseni?
 
     public CoapActuatorHandler getActuator(String label) throws ConnectorException, IOException {
         Pattern pattern = Pattern.compile(String.format("/actuator/%s(/|$)", label));
-
-        Set<String> deviceEndpoints = client.discover()
-                .stream()
-                .map(WebLink::getURI)
-                .filter(pattern.asPredicate())
-                .collect(Collectors.toSet());
-
-        return new CoapActuatorHandler(this, deviceEndpoints, label);
+        return new CoapActuatorHandler(this, getEndpoints(pattern), label);
     }
 
 
@@ -152,7 +136,24 @@ public class CoapControlClient {
         return uri;
     }
 
+
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+
+    private Set<String> getEndpoints(Pattern pattern) {
+        Set<String> deviceEndpoints;
+        try {
+            deviceEndpoints = client.discover()
+                    .stream()
+                    .map(WebLink::getURI)
+                    .filter(pattern.asPredicate())
+                    .collect(Collectors.toSet());
+        } catch ( ConnectorException | IOException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
+        return deviceEndpoints;
     }
 }

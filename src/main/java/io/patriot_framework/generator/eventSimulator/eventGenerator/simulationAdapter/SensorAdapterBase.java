@@ -17,11 +17,20 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.simulationAdapter;
 
 import io.patriot_framework.generator.Data;
+import io.patriot_framework.generator.dataFeed.DataFeed;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
+public abstract class SensorAdapterBase <T> extends EventBusClientBase {
+    private DataFeedMessenger messenger;
+    public SensorAdapterBase(DataFeedMessenger messenger) {
+        this.messenger = messenger;
+    }
 
-// kdyz bude zavolane update data tak zodpovida za to, ze se dostanou do clienta, jak casto se budou data obnovovat je na adapteru
-public interface SimulationAdapterServer {
-    void updateData(Data data);
-    void setSimulationAdapter(SimulationAdapter simulationAdapter);
-    SimulationAdapterClient getClient();
+    protected boolean changeDataFeed(DataFeed dataFeed) {
+        return messenger.changeDataFeed(dataFeed);
+    }
+
+    protected boolean updateData(T data) {
+        return messenger.updateData(new Data(data.getClass(), data));
+    }
 }

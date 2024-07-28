@@ -16,8 +16,8 @@
 
 package io.patriot_framework.generator.eventSimulator.eventGenerator.simulationAdapter;
 
-import io.patriot_framework.generator.Data;
+import java.util.Deque;
 
-public interface SimulationAdapter {
-    void reactToClientUpdate(Data data);
+public interface ActuatorMessenger {
+    public Deque<String> getStateHistory();
 }

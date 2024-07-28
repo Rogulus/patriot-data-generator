@@ -37,4 +37,8 @@ public class CoapDataFeedHandler {
     public void updateDataFeed(DataFeed dataFeed) throws ConnectorException, IOException {
         ccc.put(dataFeedEndpoint, JSONSerializer.serializeDataFeed(dataFeed));
     }
+
+    public String getDataFeedLabel() {
+        return dataFeedLabel;
+    }
 }

@@ -17,42 +17,38 @@
 package io.patriot_framework.generator.eventSimulator.eventGenerator.simulationAdapter;
 
 import io.patriot_framework.generator.Data;
-import io.patriot_framework.generator.controll.client.CoapActuatorHandler;
-import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import io.patriot_framework.generator.eventSimulator.Time.Time;
-import org.eclipse.californium.elements.exception.ConnectorException;
+import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 
-import java.io.IOException;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 
 public abstract class ActuatorAdapterBase extends EventBusClientBase {
     Deque<String> stateHistory;
-    private CoapActuatorHandler coapActuatorHandler;
+    private ActuatorMessenger messenger;
     Time pollingInterval;
 
 
-    public ActuatorAdapterBase(CoapActuatorHandler actuatorHandler, Time pollingInterval) {
-        coapActuatorHandler = actuatorHandler;
+    public ActuatorAdapterBase(ActuatorMessenger messenger, Time pollingInterval) {
+        this.messenger = messenger;
         this.pollingInterval = pollingInterval;
     }
-
-//    public ActuatorAdapter(String ip, int port, String actuatorLabel) throws ConnectorException, IOException {
-//        this( new CoapControlClient(ip + ":" + port), actuatorLabel);
-//    }
 
 
     protected String getNext() throws NoSuchElementException {
         return stateHistory.removeFirst();
     }
 
-    protected String peekLast() throws NoSuchElementException{
+
+    protected String peekLast() throws NoSuchElementException {
         return stateHistory.getLast();
     }
+
 
     protected boolean hasChanged() {
         return !stateHistory.isEmpty();
     }
+
 
     protected int stateUpdatesCount() {
         return stateHistory.size();
@@ -64,30 +60,20 @@ public abstract class ActuatorAdapterBase extends EventBusClientBase {
 
 
     @Override
-    public final void init () {
+    public final void init() {
         registerRecurringAwake(pollingInterval);
     }
 
+
     @Override
-    public final void awake () {
-
-        try {
-            stateHistory = coapActuatorHandler.getStateHistory();
-            stateHistory.removeFirst(); // first element was the last observed state
-//            Iterator<String> iter = stateHistory.iterator();
-//            iter.next();
-//            while (iter.hasNext()) {
-//                publish(new Data(String.class, iter.next()), "actuatorUpdate");
-//            }
-
-        } catch (ConnectorException | IOException e) {
-            throw new RuntimeException(e);
-        }  //todo nejak poresit ty exceptions
-
+    public final void awake() {
+        stateHistory = messenger.getStateHistory();
+        stateHistory.removeFirst(); // first element was the last observed state
         processUpdates();
     }
 
+
     @Override
-    public final void receive (Data message, String topic){
+    public final void receive(Data message, String topic) {
     }
 }

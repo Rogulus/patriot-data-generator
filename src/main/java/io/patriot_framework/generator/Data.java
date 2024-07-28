@@ -18,6 +18,8 @@ package io.patriot_framework.generator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
+import java.util.Objects;
+
 /**
  * Class provides simple tool to store data in different data types.
  * To give users freedom in designing Devices and DataFeeds library offers
@@ -52,6 +54,15 @@ public class Data {
      */
     public Data(Class<?> dataClazz) {
         this.dataClazz = dataClazz;
+    }
+
+    /**
+     * Copy Constructor
+     * @param data data to be copied
+     */
+    public Data(Data data) {
+        this.dataClazz = data.dataClazz;
+        this.data = data.data;
     }
 
     /**
@@ -92,5 +103,17 @@ public class Data {
                 "data type=" + dataClazz +
                 ", data=" + data.toString() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Data data1)) return false;
+        return Objects.equals(dataClazz, data1.dataClazz) && Objects.equals(data, data1.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataClazz, data);
     }
 }
