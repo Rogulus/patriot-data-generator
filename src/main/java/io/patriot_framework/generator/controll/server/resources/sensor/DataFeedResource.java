@@ -103,17 +103,13 @@ public class DataFeedResource extends CoapResource {
     public void handlePUT(CoapExchange exchange) {
         exchange.accept();
         String body = exchange.getRequestText();
-        LOGGER.warn("Handler PUT data feed resource");
-        LOGGER.warn(body.toString());
-
-        System.out.println("Handler PUT data feed resource");
-        System.out.println(body);
 
         DataFeed newDataFeed;
         try {
             newDataFeed = mapper.readValue(body, DataFeed.class);
         } catch (IOException e) {
             exchange.respond(CoAP.ResponseCode.UNPROCESSABLE_ENTITY, "DataFeed cannot be deserialized");
+            LOGGER.warn(e.toString());
             return;
         }
 
@@ -126,7 +122,7 @@ public class DataFeedResource extends CoapResource {
         if(myDataFeed != null) {
             sensor.removeDataFeed(myDataFeed);
             sensor.addDataFeed(newDataFeed);
-            LOGGER.warn("Data feed updated");
+            LOGGER.info("Data feed updated");
             exchange.respond(CoAP.ResponseCode.CHANGED);
             return;
         }

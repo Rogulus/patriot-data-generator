@@ -36,7 +36,7 @@ public class CoapSensorHandler extends CoapDeviceHandler {
     }
 
     public CoapDataFeedHandler getDataFeedHandler(String label) {
-        Pattern pattern = Pattern.compile(String.format("/%s(/|$)", "dataFeed"));
+        Pattern pattern = Pattern.compile(String.format("/%s$", "dataFeed"));
             Optional<String> dataFeedEndpoint = deviceEndpoints.stream()
                     .filter(pattern.asPredicate())
                     .findFirst();

@@ -40,11 +40,11 @@ public abstract class EventBusClientBase implements EventDistributorClient, Cont
         eventBus.registerRecurringAwake(this, interval);
     }
 
-    public void registerRecurringAwake(Time interval, Time startTime) {
+    protected void registerRecurringAwake(Time interval, Time startTime) {
         eventBus.registerRecurringAwake(this, interval, startTime);
     }
 
-    public void unregisterRecurringAwake() {
+    protected void unregisterRecurringAwake() {
         eventBus.unregisterRecurringAwake(this);
     }
 

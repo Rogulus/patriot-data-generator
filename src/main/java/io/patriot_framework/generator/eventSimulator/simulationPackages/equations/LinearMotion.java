@@ -56,8 +56,9 @@ public class LinearMotion extends EventBusClientBase {
 
     @Override
     public void awake() {
-        System.out.println("time in awake: " + eventBus.getTime());
         var time = new ContinuousTimeSeconds(eventBus.getTime());
-        publish(new Data(StandardCartesianCoordinate.class, getPositionInTime(time)), "LinearMotionPosition:" + id);
+        var pos = getPositionInTime(time);
+        System.out.println("Position of " + id + " is: " + pos.getCoordinateValues());
+        publish(new Data(StandardCartesianCoordinate.class, pos), "LinearMotionPosition:" + id);
     }
 }

@@ -40,6 +40,7 @@ public class CoapDataFeedMessenger implements DataFeedMessenger {
         try {
             dataFeed.setLabel(handler.getDataFeedLabel());
             handler.updateDataFeed(dataFeed);
+
         } catch (ConnectorException | IOException e) {
             LOGGER.warn(e.toString());
             return false;

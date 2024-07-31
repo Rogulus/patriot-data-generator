@@ -16,7 +16,10 @@
 
 package io.patriot_framework.generator;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Objects;
 
@@ -25,7 +28,9 @@ import java.util.Objects;
  * To give users freedom in designing Devices and DataFeeds library offers
  * Data structure to save and safety manipulate with generated data.
  */
-@JsonIgnoreType
+//@JsonIgnoreType
+@JsonSerialize
+@JsonDeserialize
 public class Data {
 
     /**
@@ -43,7 +48,8 @@ public class Data {
      * @param dataClazz class of stored object
      * @param data stored data
      */
-    public Data(Class<?> dataClazz, Object data) {
+    @JsonCreator
+    public Data(@JsonProperty("dataClazz")Class<?> dataClazz,@JsonProperty("data") Object data) {
         this.dataClazz = dataClazz;
         this.data = data;
     }
@@ -52,7 +58,7 @@ public class Data {
      * Constructor
      * @param dataClazz class of data stored in object
      */
-    public Data(Class<?> dataClazz) {
+    public Data(@JsonProperty("dataClazz") Class<?> dataClazz) {
         this.dataClazz = dataClazz;
     }
 
@@ -95,6 +101,16 @@ public class Data {
         }
 
         return null;
+    }
+
+    @JsonProperty("dataClazz")
+    public Class<?> getDataClazz() {
+        return dataClazz;
+    }
+
+    @JsonProperty("data")
+    public Object getData() {
+        return data;
     }
 
     @Override

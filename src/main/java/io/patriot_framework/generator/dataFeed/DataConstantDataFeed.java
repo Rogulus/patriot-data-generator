@@ -17,6 +17,7 @@
 package io.patriot_framework.generator.dataFeed;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.patriot_framework.generator.Data;
 
@@ -38,6 +39,8 @@ public class DataConstantDataFeed implements DataFeed {
         return new Data(constant);
     }
 
+
+    @JsonIgnore
     @Override
     public Data getPreviousValue() {
         return new Data(constant);
@@ -63,5 +66,10 @@ public class DataConstantDataFeed implements DataFeed {
     @Override
     public int hashCode() {
         return Objects.hash(label, constant);
+    }
+
+    @Override
+    public String toString() {
+        return "DATA FEED constant:" + constant + "label:" + label;
     }
 }

@@ -20,12 +20,15 @@ import io.patriot_framework.generator.eventSimulator.Time.Time;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBus;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusClientBase;
 import io.patriot_framework.generator.eventSimulator.eventGenerator.eventBus.EventBusImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Conductor {
+    public static Logger LOGGER = LoggerFactory.getLogger(Conductor.class);
     private final EventBus eventBus;
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final Object shutdownLock = new Object();
@@ -34,8 +37,8 @@ public class Conductor {
     public Conductor (EventBus eventBus) {
         this.eventBus = eventBus;
     }
-    public Conductor(Time time) { // todo pridat moznost dat jinou implementaci
-        this.eventBus = new EventBusImpl(time); // todo moza zacit od jineho casu?
+    public Conductor(Time time) {
+        this.eventBus = new EventBusImpl(time);
     }
 
     public void addSimulation(EventBusClientBase simulation) {
@@ -64,7 +67,7 @@ public class Conductor {
 
     public void runRealTimeFor(Time duration) {
         if(duration.getMillis() < 0) {
-            //todo log
+            LOGGER.warn("Duration of the simulation is smaller than 0");
             return;
         }
         runRealTime();
@@ -99,7 +102,7 @@ public class Conductor {
 
                 if(delay < 0) {
                     delay = 0;
-                    System.out.println("WARNING: simulation too slow"); // todo log
+                    LOGGER.warn("The simulation step takes longer than the allotted time");
                 }
                 scheduler.schedule(this, delay, TimeUnit.MILLISECONDS);
             }
@@ -109,14 +112,12 @@ public class Conductor {
     }
 
     public void pause() {
-        System.out.println("ZAVOLAL SE STOP");
         synchronized (shutdownLock) {
-            System.out.println("in stop");
             running = false;
             scheduler.shutdownNow();
             try {
                 if(! scheduler.awaitTermination(1,  TimeUnit.SECONDS)) {
-                    System.out.println("Log ze se nepodarilo sejmout thread");
+                    LOGGER.warn("Event bus did not pause correctly");
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

@@ -56,7 +56,7 @@ public class CoapControlClient {
     }
 
     public CoapControlClient(String ip, int port) {
-        this.uri = ip + ":" + port;
+        this.uri = "coap://" + ip + ":" + port;
         client.setURI(uri);
     }
 
@@ -126,7 +126,7 @@ public class CoapControlClient {
     }
 
 
-    public CoapActuatorHandler getActuator(String label) throws ConnectorException, IOException {
+    public CoapActuatorHandler getActuator(String label) {
         Pattern pattern = Pattern.compile(String.format("/actuator/%s(/|$)", label));
         return new CoapActuatorHandler(this, getEndpoints(pattern), label);
     }
